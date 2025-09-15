@@ -1,9 +1,9 @@
 <template>
   <v-container class="fill-height hf_loginpage" fluid>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="12" md="6" lg="6" class="h-full"></v-col>
-      <v-col cols="12" sm="12" md="6" lg="6">
-        <v-card class="elevation-12">
+    <v-row align="center" justify="center" class="">
+      <!-- <v-col cols="12" sm="12" md="6" lg="6" class="h-full"></v-col> -->
+      <v-col cols="12" sm="12" md="6" lg="6" class="h-full">
+        <v-card class="elevation-12 h-full">
           <v-toolbar color="primary">
             <router-link :to="{ name: 'home' }">
               <v-avatar size="40" tile>
@@ -11,75 +11,50 @@
               </v-avatar>
             </router-link>
             <v-toolbar-title class="ml-2">
-              {{ $t('Registration') }}
+              {{ $t('Authentication') }}
             </v-toolbar-title>
-            <v-spacer />
           </v-toolbar>
           <v-card-text>
             <oauth />
-            <web3-auth />
-            <v-form ref="form" v-model="formIsValid" @submit.prevent="register" style="display: none;">
+            <v-btn type="submit" color="primary" class="w-full" :to="{ name: 'home' }">
+              {{ $t('Home') }}
+            </v-btn>
+            <!-- <web3-auth /> -->
+            <v-form v-model="formIsValid" @submit.prevent="login" style="display: none;">
               <div id="showEmailDiv">
-                <v-text-field v-model="form.name" :label="$t('Name')" type="text" name="name"
-                  :rules="[validationRequired]" :error="form.errors.has('name')" :error-messages="form.errors.get('name')"
-                  outlined @keydown="clearFormErrors($event, 'name')" />
-
                 <v-text-field v-model="form.email" :label="$t('Email')" type="email" name="email"
                   :rules="[validationRequired, validationEmail]" :error="form.errors.has('email')"
-                  :error-messages="form.errors.get('email')" outlined @keydown="clearFormErrors($event, 'email')" />
-
-                <form-parameter v-for="field in fields" :key="field.id" v-model="form.fields[field.id]" :parameter="field"
-                  :form="form" form-key="fields" />
+                  :error-messages="form.errors.get('email')" outlined @keydown="clearFormErrors" />
 
                 <v-text-field v-model="form.password" :label="$t('Password')"
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'"
-                  name="password" :rules="[validationRequired, v => validationMinLength(v, 8)]"
-                  :error="form.errors.has('password')" :error-messages="form.errors.get('password')" outlined
-                  :counter="true" @click:append="showPassword = !showPassword"
-                  @keydown="clearFormErrors($event, 'password')" />
+                  name="password" :rules="[validationRequired]" :error="form.errors.has('password')"
+                  :error-messages="form.errors.get('password')" outlined :counter="true"
+                  @click:append="showPassword = !showPassword" @keydown="clearFormErrors" />
 
-                <v-text-field v-model="form.password_confirmation" :label="$t('Confirm password')"
-                  :append-icon="showPassword2 ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword2 ? 'text' : 'password'"
-                  name="password_confirmation" :rules="[validationRequired, v => validationMatch(form.password, v)]"
-                  :error="form.errors.has('password_confirmation')"
-                  :error-messages="form.errors.get('password_confirmation')" outlined :counter="true"
-                  @click:append="showPassword2 = !showPassword2"
-                  @keydown="clearFormErrors($event, 'password_confirmation')" />
-                <v-checkbox v-model="agreementAccepted" color="primary">
-                  <template v-slot:label>
-                    <i18n path="I accept {0} and {1}" tag="div">
-                      <template v-slot:0>
-                        <a href="/pages/terms-of-use" target="_blank" @click.stop>
-                          {{ $t('Terms of use') }}
-                        </a>
-                      </template>
-                      <template v-slot:1>
-                        <a href="/pages/privacy-policy" target="_blank" @click.stop>
-                          {{ $t('Privacy policy') }}
-                        </a>
-                      </template>
-                    </i18n>
-                  </template>
-                </v-checkbox>
+                <v-checkbox v-model="form.remember" name="remember" :label="$t('Remember me')" color="primary"
+                  true-value="1" false-value="" />
 
                 <vue-recaptcha v-if="recaptchaPublicKey" ref="recaptcha" :sitekey="recaptchaPublicKey"
                   :loadRecaptchaScript="true" :theme="this.$vuetify.theme.isDark ? 'dark' : 'light'" class="mb-3"
                   @verify="token => form.recaptcha = token" />
               </div>
-              <v-row align="center" style="display: none;">
+              <v-row align="center" class="linkurl">
                 <v-col class="text-center text-md-left">
                   <v-btn type="submit" color="primary"
-                    :disabled="!formIsValid || form.busy || !agreementAccepted || (!!recaptchaPublicKey && !form.recaptcha)"
-                    :loading="form.busy">
-                    {{ $t('Register') }}
+                    :disabled="!formIsValid || loading || (!!recaptchaPublicKey && !form.recaptcha)" :loading="loading">
+                    {{ $t('Log in') }}
                   </v-btn>
                 </v-col>
-                <v-col class="text-center text-md-right">
-                  <!-- <span class="m-0 unterlineText" id="showEmailTxt" @click="showEmailDiv">
-                    {{ $t('Register With Email?') }}
+                <v-col class="d-flex flex-column text-center text-md-right">
+                  <!-- <span class="m-0 unterlineText" id="showEmailTxt" @click="showEmailDiv"">
+                    {{ $t('Login With Email?') }}
                   </span> -->
-                  <router-link :to="{ name: 'login' }">
-                    {{ $t('Already signed up?') }}
+                  <router-link :to="{ name: 'register' }">
+                    {{ $t('Not signed up?') }}
+                  </router-link>
+                  <router-link :to="{ name: 'password.email' }">
+                    {{ $t('Forgot password?') }}
                   </router-link>
                 </v-col>
               </v-row>
@@ -92,68 +67,68 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { config } from '~/plugins/config'
 import Form from 'vform'
 import FormMixin from '~/mixins/Form'
 import Oauth from '~/components/Oauth'
-import VueRecaptcha from 'vue-recaptcha'
 import Web3Auth from '~/components/Web3Auth'
-import FormParameter from '~/components/FormParameter'
+import { mapState } from 'vuex'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
-  components: { FormParameter, Web3Auth, Oauth, VueRecaptcha },
+  components: { Web3Auth, Oauth, VueRecaptcha },
 
   mixins: [FormMixin],
 
   middleware: 'guest',
 
   metaInfo() {
-    return { title: this.$t('Registration') }
+    return { title: this.$t('Authentication') }
   },
 
   data() {
     return {
-      agreementAccepted: false,
+      loading: false,
+      csrfCookieRetrieved: false,
       showPassword: false,
-      showPassword2: false,
       form: new Form({
-        name: null,
         email: null,
         password: null,
-        password_confirmation: null,
-        recaptcha: null,
-        fields: {}
+        remember: '', // it's important to pass empty string as false value so $request->filled('remember') returns false,
+        recaptcha: null
       })
     }
   },
 
   computed: {
+    ...mapState('auth', [
+      'user'
+    ]),
     appLogoUrl() {
       return config('app.logo')
     },
-    emailVerification() {
-      return config('settings.users.email_verification')
-    },
     recaptchaPublicKey() {
       return config('services.recaptcha.public_key')
-    },
-    fields() {
-      return config('settings.users.fields')
     }
   },
 
-  created() {
-    this.form.fields = this.fields.reduce((a, field) => ({ ...a, [field.id]: field.default }), {})
-  },
-
   methods: {
-    async register() {
-      // Register the user
-      const { data } = await this.form.post('/api/auth/register')
+    async login() {
+      this.loading = true
+
+      if (!this.csrfCookieRetrieved) {
+        await axios.get('/sanctum/csrf-cookie')
+        this.csrfCookieRetrieved = true
+      }
+
+      // log in
+      const { data } = await this.form.post('/api/auth/login')
         .catch(() => {
           if (this.recaptchaPublicKey) {
             this.form.recaptcha = null
             this.$refs.recaptcha.reset()
+            this.loading = false
           }
           return {}
         })
@@ -162,9 +137,14 @@ export default {
       if (data) {
         // Store the user
         this.$store.dispatch('auth/updateUser', data)
-        this.$store.dispatch('message/success', { text: this.$t('You have successfully registered!') })
 
-        this.$router.push({ name: this.emailVerification ? 'verification.index' : 'home' })
+        if (this.user.two_factor_auth_enabled && !this.user.two_factor_auth_passed) {
+          this.$router.push({ name: '2fa' })
+        } else {
+          this.$router.push({ name: 'home' })
+        }
+      } else {
+        this.loading = false
       }
     },
     showEmailDiv() {

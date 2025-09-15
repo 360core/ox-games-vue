@@ -131,14 +131,16 @@
         <div class="ml-3 d-none d-sm-block text-h5">
           {{ appName }}
         </div>
+         <!-- <v-btn 
+          v-if="$route.path.includes('games')"
+         :to="{ name: 'home' }" class="ml-2 secondary darken3">
+           {{ $t('Exit ') }}
+         </v-btn> -->
       </v-toolbar-title>
-
       <v-spacer />
 
       <template v-if="!token && !authenticated">
-        <!-- <v-btn :to="{ name: 'login' }" class="secondary darken3">
-          {{ $t('Log in') }}
-        </v-btn> -->
+       
         <!-- <v-btn :to="{ name: 'register' }" class="primary ml-2">
           {{ $t('Sign up') }}
         </v-btn> -->
@@ -456,7 +458,7 @@
                   </v-col>
                 </v-row> -->
               </v-form>
-              <div class="w-full">
+              <!-- <div class="w-full">
                 <div class="w-full flex items-center">
                   <div class="flex-1 h-[1px] bg-white bg-opacity-10"></div>
                   <div class="mx-3 flex-none text-sm text-white mb-0 text-opacity-60 font-semibold">Log in directly with
@@ -465,7 +467,7 @@
                 </div>
                 <oauth />
                 <web3-auth />
-              </div>
+              </div> -->
             </div>
 
             <div key="reset" v-if="activeTab === 'reset'"

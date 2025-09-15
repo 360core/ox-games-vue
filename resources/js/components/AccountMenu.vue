@@ -18,7 +18,10 @@
         <!-- <v-icon class="mr-1">
           {{ creditsIcon }}
         </v-icon> -->
-        <v-img src="/images/ox-coin.jpg" class="coin-icon"></v-img>
+        <!-- <v-img src="/images/ox-coin.png" class="coin-icon"></v-img> -->
+         <div class="oc-icon">
+            <img src="/images/ox-icon.png" width="24" />
+          </div>
         <animated-number v-if="account" :number="account.balance" class="max-md:w-12 ellipsis ml-1" />
       </v-btn>
     </template>

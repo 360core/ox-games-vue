@@ -67,14 +67,14 @@
             </div>
           </template>
 
-          <template #item.result="{ item }">
+          <!-- <template #item.result="{ item }">
             <span v-if="item.win > 0">
               {{ $t('{0} bet {1} and won {2} credits', [item.account.user.name, item.bet, item.win > 999 ? decimal(item.win) : item.win]) }}
             </span>
             <span v-else>
               {{ $t('{0} bet {1} credits and lost', [item.account.user.name, item.bet]) }}
             </span>
-          </template>
+          </template> -->
 
           <template #item.time="{ item }">
             <v-icon small class="mr-1">mdi-clock-outline</v-icon>{{ item.updated_ago }}
@@ -122,7 +122,7 @@ export default {
       headers: [
         { text: this.$t('User'), value: 'user', sortable: false },
         { text: this.$t('Title'), value: 'title' },
-        { text: this.$t('Result'), value: 'result', sortable: false },
+        // { text: this.$t('Result'), value: 'result', sortable: false },
         { text: this.$t('Time'), value: 'time' },
         { text: this.$t('Status'), value: 'status', sortable: false },
         { text: this.$t('Action'), value: 'action', sortable: false },

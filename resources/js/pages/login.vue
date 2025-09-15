@@ -16,7 +16,10 @@
           </v-toolbar>
           <v-card-text>
             <oauth />
-            <web3-auth />
+            <v-btn type="submit" color="primary" class="w-full" :to="{ name: 'home' }">
+              {{ $t('Home') }}
+            </v-btn>
+            <!-- <web3-auth /> -->
             <v-form v-model="formIsValid" @submit.prevent="login" style="display: none;">
               <div id="showEmailDiv">
                 <v-text-field v-model="form.email" :label="$t('Email')" type="email" name="email"

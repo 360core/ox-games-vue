@@ -128,7 +128,7 @@
                 <div v-if="selectCoinPrice != 0" class="mt-2 deposit-amount-display">
                  {{selectedCurrency}} = ${{ Number(selectCoinPrice).toFixed(2) }}
                 </div>
-                <v-btn density="default" class="primary w-full mt-6" color="primary" @click="submit">Deposit</v-btn>
+                <v-btn density="default" class="primary w-full mt-6" color="primary" :disabled="isSubmitting" @click="submit">Deposit</v-btn>
                 <v-btn density="default" class=" w-full mt-2" color="" @click="close">Cancel</v-btn>
                 <div v-if="errorMessage" class="mt-3 text-red-500 text-sm text-center">
                   {{ errorMessage }}
@@ -149,12 +149,13 @@ export default {
     return {
       show: false,
       amount: null,
+      isSubmitting: false,
       selectedPaymentMethod:null,
       selectedCurrency: null,
       selectedNetwork: null,
       isPolygonActive: true,
       selectCoinPrice : 0,
-       errorMessage: "",   // 🔴 error message mate
+      errorMessage: "",   // 🔴 error message mate
       items: [
         { name: 'OC', icon: '/images/ox-icon.png'},
         { name: 'OXINOX', icon: '/images/oxinox-icon.png'},
@@ -207,6 +208,9 @@ export default {
        this.amount = null
        this.selectedCurrency = null
        this.selectedNetwork = null
+      this.selectedPaymentMethod = null
+      this.errorMessage = ""
+      this.selectCoinPrice = ""
     },
     onPaymentMethodChange(method) {
       this.selectedPaymentMethod = method
@@ -234,7 +238,7 @@ export default {
     },
     async submit() {
       if (!this.selectedCurrency || !this.selectedNetwork) {
-        alert('Missing required fields')
+        this.errorMessage ='Missing required fields'; 
         return
       }
      
@@ -261,6 +265,9 @@ export default {
         this.amount = null
         this.selectedCurrency = null
         this.selectedNetwork = null
+        this.selectedPaymentMethod = null
+        this.errorMessage = ""
+        this.selectCoinPrice = ""
       } catch (error) {
         console.error('Deposit request failed:', error)
       }
@@ -268,14 +275,17 @@ export default {
     async payWithWallet() {
       try {
         if (!window.ethereum) {
-          alert("Please install MetaMask or Wallet extension!");
+          this.errorMessage = "Please install MetaMask or Wallet extension!"
           return;
         }
 
+
         if (!this.selectedCurrency || !this.selectedNetwork || !this.amount) {
-          alert("Missing required fields");
+          this.errorMessage = "Missing required fields"
           return;
         }
+
+        this.isSubmitting = true;
 
         const contractAddress = {
           "OC_Polygon": "0x6eA4BaBF46AfC7895ee20594b86fDcF74526c3ec",
@@ -289,7 +299,7 @@ export default {
         const key = `${this.selectedCurrency}_${this.selectedNetwork}`;
         const tokenAddress = contractAddress[key];
         if (!tokenAddress) {
-          alert("Invalid token / network selection");
+          this.errorMessage = "Invalid token / network selection"
           return;
         }
 
@@ -353,7 +363,6 @@ export default {
         const receipt = await tx.wait();
         console.log("Transaction confirmed:", receipt);
 
-        alert("Deposit successful!");
         window.location.href = '/user/account/deposits'
         this.close();
       } catch (err) {
@@ -365,6 +374,8 @@ export default {
         const { data } = await axios.post('/api/deposit/cancel')
         //window.location.href = '/user/account/deposits'
         console.error("Wallet transfer failed:", err);
+      } finally {
+        this.isSubmitting = false;
       }
     }
 

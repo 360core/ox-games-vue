@@ -136,6 +136,12 @@ export default {
 
   methods: {
     async logout () {
+       if (this.isConnected) {
+        // Add your disconnect wallet logic here, e.g.,
+        // this.disconnectWallet(); or whatever disconnect method you have
+        this.isConnected = false; // reset connected state
+        this.form.address = null; // clear wallet address if stored
+      }
       // Log out
       await this.$store.dispatch('auth/logout')
 
