@@ -85,7 +85,7 @@
                 <template v-if="method.payment_method">
                   <form-parameter v-for="parameter in method.payment_method.input_parameters" :key="parameter.id"
                     v-model="form.parameters[parameter.id]" :parameter="parameter" :form="form" form-key="parameters"
-                    :disabled="formIsProcessing" :readonly="true"/>
+                    :disabled="formIsProcessing"/>
                 </template>
     
                 <template v-if="method.parameters">

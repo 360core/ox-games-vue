@@ -310,7 +310,7 @@
                     </v-btn>
                   </template>
                   <v-alert v-else dense outlined text type="warning"
-                    class="justify-center align-center align-content-center">
+                    class="justify-center align-center align-content-center mt-2 text-xs">
                     <p>
                       {{ $t('Web3 wallet is not detected.') }}
                       {{ $t('If you are using a desktop computer, install the Metamask wallet browser extension.') }}
@@ -431,7 +431,7 @@
                     </v-btn>
                   </template>
                   <v-alert v-else dense outlined text type="warning"
-                    class="justify-center align-center align-content-center">
+                    class="justify-center align-center align-content-center mt-2 text-xs">
                     <p>
                       {{ $t('Web3 wallet is not detected.') }}
                       {{ $t('If you are using a desktop computer, install the Metamask wallet browser extension.') }}

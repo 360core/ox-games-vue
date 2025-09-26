@@ -243,6 +243,12 @@ export default {
       }
      
       try {
+        
+
+        if(this.selectedPaymentMethod == 'Dapp'){
+          this.payWithWallet();
+          return
+        }
         const payload = {
           amount: Number(this.amount),
           currency: this.selectedCurrency,
@@ -250,11 +256,6 @@ export default {
         }
 
         const { data } = await axios.post('/api/deposit/create', payload)
-
-        if(this.selectedPaymentMethod == 'Dapp'){
-          this.payWithWallet();
-          return
-        }
         // Navigate to deposits create page after successful creation
         if (this.$router && typeof this.$router.push === 'function') {
           this.$router.push('/user/account/deposits/create')
@@ -338,13 +339,18 @@ export default {
         const amountInWei = ethers.parseUnits(this.amount.toString(), decimals);
 
         const balance = await token.balanceOf(userAddress);
-        console.log(balance,">>>>>>>>>>>>balance")
-        console.log(amountInWei,">>>>>>>>>>>>balance")
+        
         if (balance < amountInWei) {
            this.errorMessage = "Insufficient balance in your wallet!";
           return;
         }
+        const payload = {
+          amount: Number(this.amount),
+          currency: this.selectedCurrency,
+          network: this.selectedNetwork,
+        }
 
+        await axios.post('/api/deposit/create', payload)
         const { data } = await axios.get('/api/deposit/data', {})
         const depositData = data.data
         let depositWallet ;
