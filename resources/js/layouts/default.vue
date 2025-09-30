@@ -4,10 +4,15 @@
     <system-bar
       v-if="!(isMobile && (isGamePage || isPredictionPage || isProviderGamePage)) && systemBarEnabled && authenticated" />
 
-    <v-navigation-drawer border="0" v-model="navigationDrawer" :mini-variant.sync="isMobile ? false : miniVariant" app
-      :permanent="!isMobile" :temporary="isMobile" :color="navBarBackground" :width="miniVariant ? '56px' : '260px'"
-      :class="[{ 'gameplaying': playing }, miniVariant ? 'px-3' : 'px-4', { 'game-page': isGamePage }]"
-      class="border-0">
+    <v-navigation-drawer border="0" v-model="navigationDrawer" :mini-variant.sync="isMobile  ? false : miniVariant" app
+      :permanent="!isMobile" :temporary="isMobile" :color="navBarBackground" :width="miniVariant ? '260px' : '260px'"
+      :class="[
+        //  { 'gameplaying': playing },
+
+        miniVariant ? 'px-3' : 'px-4',
+        isMobile ?( isGamePage ? 'game-page1' : 'with-header') : ''
+        // { 'game-page': isGamePage }
+      ]" class="border-0">
       <!-- :permanent="navbarVisible"
       :temporary="!navbarVisible" -->
       <!-- <v-list-item>
@@ -19,8 +24,9 @@
       </v-list-item>
       <v-divider /> -->
       <!-- <span>{{ this.isMobile }}</span> -->
-      <button v-if="isMobile" @click.stop="navigationDrawer = !navigationDrawer" class="mobile-drawer-close">
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="20"
+      <button v-if="isMobile" @click.stop="navigationDrawer = !navigationDrawer"
+        class="flex justify-end w-full mobile-drawer-close">
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="25"
           height="20" x="0" y="0" viewBox="0 0 24 24" style="enable-background:new 0 0 512 512" xml:space="preserve"
           class="">
           <g>
@@ -30,7 +36,7 @@
               fill="#ffffff" opacity="1" class=""></path>
           </g>
         </svg>
-        <span v-if="!isGamePage">Close</span>
+        <span>Close</span>
       </button>
       <div class="flex gap-2">
         <div class="balance-box d-flex align-center justify-start">
@@ -99,7 +105,7 @@
           <v-btn v-show="!isProviderGamePage" small :to="{ name: 'user.account.transactions' }" exact
             color="rgba(255,255,255,0.2)" style="backdrop-filter:  blur(6px);">
             <!-- outlined -->
-            <v-img src="/images/ox-coin.jpg" class="coin-icon mr-1" style="width: 22px;"></v-img>
+            <img src="/images/ox-icon2.png" width="22" />
             <!-- <v-icon small class="mr-1">
               {{ creditsIcon }}
             </v-icon> -->
@@ -131,7 +137,7 @@
         <div class="ml-3 d-none d-sm-block text-h5">
           {{ appName }}
         </div>
-         <!-- <v-btn 
+        <!-- <v-btn 
           v-if="$route.path.includes('games')"
          :to="{ name: 'home' }" class="ml-2 secondary darken3">
            {{ $t('Exit ') }}
@@ -140,7 +146,7 @@
       <v-spacer />
 
       <template v-if="!token && !authenticated">
-       
+
         <!-- <v-btn :to="{ name: 'register' }" class="primary ml-2">
           {{ $t('Sign up') }}
         </v-btn> -->
@@ -1074,6 +1080,15 @@ body {
   }
 }
 
+.with-header {
+   padding-top: 64px !important;
+}
+
+/* Game page → header skip */
+.game-page1 {
+  padding-top: 10 !important;
+}
+
 .tab-buttons {
   display: flex;
   justify-content: space-around;
@@ -1097,6 +1112,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+body .padding-top-zero {
+  padding-top: 0px !important;
 }
 
 .custom-text-field {

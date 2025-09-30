@@ -269,9 +269,9 @@
   @media(min-width:960px){
     height: calc(100vh - 64px) !important;
   }
-  &.v-navigation-drawer--is-mobile{
-    padding-top: 64px !important;
-  }
+  // &.v-navigation-drawer--is-mobile{
+  //   // padding-top: 64px !important;
+  // }
   // &:before{
   //   content: "";
   //   display: block;
@@ -313,9 +313,10 @@
   }
   .mobile-drawer-close{
     padding: 0px;
+    padding-top: 10px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 5px;
     font-size: 14px;
     color: #ffffff;
     font-weight: 500;
