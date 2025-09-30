@@ -1216,7 +1216,7 @@ export default {
       if (previousValue !== null) {
         this.$nextTick(() => {
           if (this.$refs.wheel) this.$refs.wheel.style.transform = `rotate(${this.animation.wheel_angle}rad)`
-          if (this.$refs.wheel) this.$refs.wheel2.style.transform = `rotate(${this.animation.wheel_angle}rad)`
+          if (this.$refs.wheel2) this.$refs.wheel2.style.transform = `rotate(${this.animation.wheel_angle}rad)`
           if (this.$refs.line) this.$refs.line.style.left = `calc(50% - 30px - ${this.animation.line_pos}px)`
         })
       }
@@ -1442,7 +1442,7 @@ export default {
         this.animation.wheel_angle += this.animation.wheel_speed * (lt - this.animation.t)
         while (this.animation.wheel_angle > Math.PI * 2) this.animation.wheel_angle -= Math.PI * 2
         if (this.$refs.wheel) this.$refs.wheel.style.transform = `rotate(${this.animation.wheel_angle}rad)`
-        if (this.$refs.wheel) this.$refs.wheel2.style.transform = `rotate(${this.animation.wheel_angle}rad)`
+        if (this.$refs.whee2) this.$refs.wheel2.style.transform = `rotate(${this.animation.wheel_angle}rad)`
       }
       /**
       *  Line animation
@@ -1464,7 +1464,7 @@ export default {
       */
       if (this.animation.wheel_break_done !== undefined && ((this.animation.mode === 'wheel' && this.animation.wheel_speed === 0) || (this.animation.mode === 'line' && this.animation.line_speed === 0))) {
         if (this.$refs.wheel) this.$refs.wheel.style.transform = `rotate(${this.animation.wheel_angle}rad)`
-        if (this.$refs.wheel) this.$refs.wheel2.style.transform = `rotate(${this.animation.wheel_angle}rad)`
+        if (this.$refs.whee2) this.$refs.wheel2.style.transform = `rotate(${this.animation.wheel_angle}rad)`
         if (this.$refs.line) this.$refs.line.style.left = `calc(50% - 30px - ${this.animation.line_pos}px)`
         this.soundStop(spinSound)
         this.animation.type = 0
