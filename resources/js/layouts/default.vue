@@ -10,7 +10,7 @@
         //  { 'gameplaying': playing },
 
         miniVariant ? 'px-3' : 'px-4',
-        isMobile ?( isGamePage ? 'game-page1' : 'with-header') : ''
+        isMobile ?( isGamePage || isPredictionPage || isProviderGamePage ? 'game-page1' : 'with-header') : ''
         // { 'game-page': isGamePage }
       ]" class="border-0">
       <!-- :permanent="navbarVisible"
