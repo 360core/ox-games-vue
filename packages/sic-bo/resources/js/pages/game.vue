@@ -191,6 +191,14 @@
         </template>
       </play-controls>
     </div>
+     <modal-info v-model="modalInfo">
+      <!-- <slot name="info" /> -->
+      <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+      <info />
+    </modal-info>
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`">
+    </div>
   </div>
   <!-- <div v-else class="d-flex fill-height align-center justify-center">
     <v-alert
@@ -228,16 +236,19 @@ import roll1Sound from 'packages/sic-bo/resources/audio/roll1.wav'
 import roll2Sound from 'packages/sic-bo/resources/audio/roll2.wav'
 
 import diceSvg from '../components/dice-svg.vue'
-
+import Info from './info'
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
 export default {
   name: 'SicBo',
 
-  components: { PlayControls, diceSvg },
+  components: { PlayControls, diceSvg ,Info, ModalInfo},
 
   mixins: [FormMixin, GameMixin, SoundMixin],
 
   data () {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
+      modalInfo: false,
       clickSound,
       showWin: false,
       message: null,
@@ -1033,6 +1044,55 @@ export default {
                 padding: 1px 0 !important;
             }
         }
+    }
+  }
+}
+   .button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 40px;
+  }
+
+  &.provably {
+    left: 455px;
+    top: 30px;
+  }
+
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
     }
   }
 }

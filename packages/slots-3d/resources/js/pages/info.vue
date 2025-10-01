@@ -1,67 +1,36 @@
 <template>
-  <v-card>
-    <v-toolbar>
-      <v-toolbar-title>
-        {{ $t('Game information') }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn icon @click="$emit('close')">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      <template v-slot:extension>
-        <v-tabs v-model="infoTab" centered hide-slider>
-          <v-tab href="#tab-about">
-            {{ $t('How to play') }}
-          </v-tab>
-          <v-tab href="#tab-paytable">
-            {{ $t('Paytable') }}
-          </v-tab>
-          <v-tab href="#tab-reels">
-            {{ $t('Reels') }}
-          </v-tab>
-        </v-tabs>
-      </template>
-    </v-toolbar>
-    <v-tabs-items v-model="infoTab">
-      <v-tab-item value="tab-about">
-        <v-card flat>
-          <v-card-text class="about-text">
-            <p>
-              {{ $t('The objective of the game is to get the symbols on the reels to fall in a perfect line.') }}
-            </p>
-          </v-card-text>
-        </v-card>
-      </v-tab-item>
-      <v-tab-item value="tab-paytable">
-        <v-card flat>
-          <v-card-text class="text-center">
-            <v-row v-for="(payline, paylineIndex) in paytable" :key="paylineIndex">
-              <v-col>
-                <v-avatar v-for="reelIndex in [0,1,2]" :key="reelIndex" size="48" tile>
-                  <img v-if="payline.positions[reelIndex] !== null" :src="symbols[payline.positions[reelIndex]]">
-                  <span v-else class="font-weight-bold">{{ $t('Any') }}</span>
-                </v-avatar>
-                <span class="ml-5">{{ $t('pays x{0} credits', [payline.payout]) }}</span>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-tab-item>
-      <v-tab-item value="tab-reels">
-        <v-card flat>
-          <v-card-text>
-            <v-row>
-              <v-col v-for="reelIndex in [0,1,2]" :key="reelIndex" class="reel overflow-y-auto text-center">
-                <v-avatar v-for="(symbolIndex, index) in reels[reelIndex]" :key="index" size="64" tile class="mb-3 d-block ml-auto mr-auto">
-                  <img :src="symbols[symbolIndex]" :alt="symbols[symbolIndex]">
-                </v-avatar>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-tab-item>
-    </v-tabs-items>
-  </v-card>
+  <div>
+    <h5>{{ $t('How to play') }}</h5>
+    <p>
+      {{ $t('The objective of the game is to get the symbols on the reels to fall in a perfect line.') }}
+    </p>
+    <h5>{{ $t('Reels') }}</h5>
+    <div class="reels">
+      <div v-for="reelIndex in [0,1,2]" :key="reelIndex" class="reel">
+        <div v-for="(symbolIndex, index) in reels[reelIndex]" :key="index" class="symbol">
+          <img :src="symbols[symbolIndex]" :alt="symbols[symbolIndex]" class="icon">
+        </div>
+      </div>
+    </div>
+    <h5>{{ $t('Paytable') }}</h5>
+    <div class="paytable">
+      <div v-for="(payline, paylineIndex) in paytable" :key="paylineIndex" class="payline">
+        <span v-for="reelIndex in [0,1,2]" :key="reelIndex" class="symbol">
+          <img
+            v-if="payline.positions[reelIndex] !== null"
+            :src="symbols[payline.positions[reelIndex]]"
+            class="icon"
+          >
+          <span v-else class="any">{{ $t('Any') }}</span>
+        </span>
+        <span class="payout">
+          {{ $t('pays x{0} credits', [payline.payout]) }}
+        </span>
+      </div>
+    </div>
+
+    
+  </div>
 </template>
 
 <script>
@@ -87,3 +56,52 @@ export default {
   }
 }
 </script>
+<style scoped>
+h5 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.payline {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.symbol {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.any {
+  font-weight: bold;
+}
+
+.payout {
+  margin-left: 16px;
+}
+
+.reels {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.reel {
+  flex: 1;
+  max-height: 300px;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.reel .symbol {
+  margin-bottom: 10px;
+}
+</style>

@@ -1,26 +1,11 @@
+
+
 <template>
-  <v-card>
-    <v-toolbar>
-      <v-toolbar-title>
-        {{ $t('Game information') }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn icon @click="$emit('close')">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      <template v-slot:extension>
-        <v-tabs v-model="infoTab" centered hide-slider>
-          <v-tab href="#tab-about">
-            {{ $t('How to play') }}
-          </v-tab>
-        </v-tabs>
-      </template>
-    </v-toolbar>
-    <v-tabs-items v-model="infoTab">
-      <v-tab-item value="tab-about">
-        <v-card flat>
-          <v-card-text class="about-text">
-            <p>
+  <div>
+    <h5>
+      {{ $t('How to play') }}
+    </h5>
+    <p>
               {{ $t('The objective of the game is to get a hand total of closer to 21 than other players without going over 21.') }}
               {{ $t('The numeral cards 2 to 10 have their face values, Jacks, Queens and Kings are valued at 10, and Aces can have a value of either 1 or 11.') }}
               {{ $t('The Ace is always valued at 11 unless that would result in the hand going over 21, in which case it is valued as 1.') }}
@@ -41,11 +26,7 @@
               {{ $t('When someone is dealt blackjack (an ace and a ten-value card) the game ends immediately.') }}
               {{ $t('If all players are busted (get more than 21 points) no one wins and the house keeps all bets.') }}
             </p>
-          </v-card-text>
-        </v-card>
-      </v-tab-item>
-    </v-tabs-items>
-  </v-card>
+  </div>
 </template>
 
 <script>

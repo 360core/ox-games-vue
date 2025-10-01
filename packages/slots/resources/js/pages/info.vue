@@ -1,13 +1,6 @@
 <template>
   <v-card>
     <v-toolbar>
-      <v-toolbar-title>
-        {{ $t('Game information') }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn icon @click="$emit('close')">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
       <template v-slot:extension>
         <v-tabs v-model="infoTab" centered hide-slider>
           <v-tab href="#tab-about">

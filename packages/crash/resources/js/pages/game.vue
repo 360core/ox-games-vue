@@ -1,15 +1,18 @@
 <template>
-  <div class="fill-height" >
+  <div class="fill-height">
     <multiplayer-game-event @game-init="onGameInit($event)" @event="onEvent($event)" />
     <div v-if="!ready" class="d-flex flex-column fill-height py-0 align-center justify-center">
       <block-preloader />
     </div>
     <div class="fill-height crashhight">
       <div class="game fill-height d-flex flex-column flex-md-row justify-md-center py-0">
-        <div class="game-view" :class="{ 'gameplaying': playing, 'crashfire': !betting && !playing && crashedAt.length !== 0 }" style="background-color: transparent;background-image: url(/images/crash-bg.jpg);background-repeat: no-repeat;background-size: cover;">
+        <div class="game-view"
+          :class="{ 'gameplaying': playing, 'crashfire': !betting && !playing && crashedAt.length !== 0 }"
+          style="background-color: transparent;background-image: url(/images/crash-bg.jpg);background-repeat: no-repeat;background-size: cover;">
           <div class="game-info">
             <div class="last-crashed">
-              <transition-group name="staggered-fade" tag="ul" class="pa-0 d-flex flex-row-reverse justify-start" :css="false" @before-enter="beforeEnterC" @enter="enterC" @leave="leaveC">
+              <transition-group name="staggered-fade" tag="ul" class="pa-0 d-flex flex-row-reverse justify-start"
+                :css="false" @before-enter="beforeEnterC" @enter="enterC" @leave="leaveC">
                 <li v-for="item in crashedAt" :key="`crashed-${item.id}`" class="d-flex justify-center overflow-hidden">
                   <div class="px-2">
                     {{ item.payout }}
@@ -24,7 +27,8 @@
                 {{ $t('Place your bets') }}
               </div>
               <div class="game-time game-frame-2 text-h2 text--secondary">
-                <countdown-timer v-if="multiplayerGame.end_time_unix" :end-date="(multiplayerGame.end_time_unix - timeDiff) / 1000" class="text-no-wrap text--secondary" />
+                <countdown-timer v-if="multiplayerGame.end_time_unix"
+                  :end-date="(multiplayerGame.end_time_unix - timeDiff) / 1000" class="text-no-wrap text--secondary" />
               </div>
             </template>
             <template v-else-if="playing">
@@ -52,31 +56,36 @@
           <div ref="animation" class="animation">
             <!-- <svg key="planet" class="planet" width="90" height="90"><image :xlink:href="animation.sprites.planet" width="90" height="90" /></svg> -->
             <div class="subanimation">
-              <svg v-for="i in cloudsCount" :key="`cloud-${i}`" :ref="`cloud-${i - 1}`" class="cloud" width="40" height="40">
-                <image :xlink:href="animation.sprites.clouds" width="40" height="40"/>
+              <svg v-for="i in cloudsCount" :key="`cloud-${i}`" :ref="`cloud-${i - 1}`" class="cloud" width="40"
+                height="40">
+                <image :xlink:href="animation.sprites.clouds" width="40" height="40" />
               </svg>
               <svg class="cloud" width="40" height="40">
-                <image :xlink:href="animation.sprites.clouds2" width="40" height="40"/>
+                <image :xlink:href="animation.sprites.clouds2" width="40" height="40" />
               </svg>
-              <svg v-for="i in airplanesCount" :key="`airplane-${i}`" :ref="`airplane-${i - 1}`" class="airplane" width="60" height="60">
-                <image :xlink:href="animation.sprites.airplane" width="60" height="60"/>
+              <svg v-for="i in airplanesCount" :key="`airplane-${i}`" :ref="`airplane-${i - 1}`" class="airplane"
+                width="60" height="60">
+                <image :xlink:href="animation.sprites.airplane" width="60" height="60" />
               </svg>
             </div>
             <canvas ref="bgCanvas" width="1280" :height="height" />
-            <svg v-if="playing" key="rocket" ref="rocket" class="rocket" width="120" height="120"><image :xlink:href="animation.sprites.rocket" width="120" height="120" /></svg>
-            <svg v-if="!animation.explode && !playing" key="rocket-stay" ref="rocketStay" class="rocket-stay" width="120" height="120"><image :xlink:href="animation.sprites.rocketStay" width="120" height="120" /></svg>
-            <svg v-if="animation.explode" ref="explosion" key="explosion" class="explosion" width="90" height="90"><image :xlink:href="animation.sprites.explosion" width="90" height="90" /></svg>
+            <svg v-if="playing" key="rocket" ref="rocket" class="rocket" width="120" height="120">
+              <image :xlink:href="animation.sprites.rocket" width="120" height="120" />
+            </svg>
+            <svg v-if="!animation.explode && !playing" key="rocket-stay" ref="rocketStay" class="rocket-stay"
+              width="120" height="120">
+              <image :xlink:href="animation.sprites.rocketStay" width="120" height="120" />
+            </svg>
+            <svg v-if="animation.explode" ref="explosion" key="explosion" class="explosion" width="90" height="90">
+              <image :xlink:href="animation.sprites.explosion" width="90" height="90" />
+            </svg>
           </div>
           <div class="formBottmControllMain px-4">
-            <play-controls :play-label="$t('Bet')" :loading="loading" :playing="!betting" :provable="false" @play="makeBet">
+            <play-controls :play-label="$t('Bet')" :loading="loading" :playing="!betting" :provable="false"
+              @play="makeBet">
               <template v-slot:after-play-button>
-                <v-btn
-                  color="primary"
-                  :loading="loading"
-                  :disabled="!playing || userBet === 0 || userWin > 0"
-                  class="ml-2"
-                  @click="cashOut"
-                >
+                <v-btn color="primary" :loading="loading" :disabled="!playing || userBet === 0 || userWin > 0"
+                  class="ml-2" @click="cashOut">
                   {{ $t('Cash out') }}
                 </v-btn>
               </template>
@@ -86,13 +95,16 @@
         <div class="players-container pa-4">
           <v-card class="fill-height">
             <v-card-text>
-              <div class="d-flex flex-row justify-space-between align-center text--secondary font-weight-bold text-uppercase">
+              <div
+                class="d-flex flex-row justify-space-between align-center text--secondary font-weight-bold text-uppercase">
                 <div>{{ $t('Player') }}</div>
                 <div>{{ $t('Bet') }} / {{ $t('Win') }}</div>
               </div>
               <div class="mt-3 pr-3 list" :class="`${$vuetify.theme.dark ? 'dark' : 'light'}-scrollbar`">
-                <transition-group name="staggered-fade" tag="ul" class="pa-0" :css="false" @before-enter="beforeEnter" @enter="enter" @leave="leave">
-                  <li v-for="(item, index) in playersGame" :key="`player-${item.id}`" :data-index="index" class="d-flex mb-2">
+                <transition-group name="staggered-fade" tag="ul" class="pa-0" :css="false" @before-enter="beforeEnter"
+                  @enter="enter" @leave="leave">
+                  <li v-for="(item, index) in playersGame" :key="`player-${item.id}`" :data-index="index"
+                    class="d-flex mb-2">
                     <div class="d-flex align-center justify-space-between flex-grow-1">
                       <div class="d-flex flex-row align-center text-no-wrap overflow-hidden">
                         <user-avatar :user="item" :size="24" class="mr-2" />
@@ -125,6 +137,16 @@
         {{ $t('Please use landscape (horizontal) orientation.') }}
       </v-alert>
     </div> -->
+    <modal-info v-model="modalInfo">
+      <!-- <slot name="info" /> -->
+       <div  class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+       <info />
+    </modal-info>
+    
+    
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`">
+    </div>
   </div>
 </template>
 
@@ -154,16 +176,18 @@ import airplaneSprite from 'packages/crash/resources/animations/planet-3.png'
 import cloudsSprite from 'packages/crash/resources/animations/aircraft.png'
 import cloudsSprite2 from 'packages/crash/resources/animations/clouds2.png'
 import explosionSprite from 'packages/crash/resources/animations/explosion.svg'
-
+import Info from './info'
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
 export default {
   name: 'Crash',
 
-  components: { CountdownTimer, MultiplayerGameEvent, AnimatedNumber, BlockPreloader, UserProfileModal, UserAvatar, PlayControls },
+  components: { ModalInfo, CountdownTimer, MultiplayerGameEvent, AnimatedNumber, BlockPreloader, UserProfileModal, UserAvatar, PlayControls, Info },
 
   mixins: [FormMixin, GameMixin, SoundMixin],
 
-  data () {
+  data() {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
       ready: false,
       loading: false,
       gameable: {},
@@ -176,6 +200,7 @@ export default {
       currentPayout: 0,
       crashedAt: [],
       timeDiff: 0,
+      modalInfo: false,
       currentPayoutInterval: null,
       active: true,
       height: 720,
@@ -213,29 +238,29 @@ export default {
   computed: {
     ...mapState('auth', ['account', 'user']),
     ...mapState('online', ['users']),
-    animationTimeLimit () {
+    animationTimeLimit() {
       return this.config.animation.time_limit
     },
-    airplanesCount () {
+    airplanesCount() {
       return this.config.animation.airplanes_count
     },
-    cloudsCount () {
+    cloudsCount() {
       return this.config.animation.clouds_count
     },
-    baseNumber () {
+    baseNumber() {
       if (this.active) return parseFloat(this.config.base_number)
       else return 1
     },
-    userBet () {
+    userBet() {
       return get(this.players, `${this.user.id}.bet`, 0)
     },
-    userWin () {
+    userWin() {
       return get(this.players, `${this.user.id}.win`, 0)
     },
-    landscape () {
+    landscape() {
       return this.$vuetify.breakpoint.width > this.$vuetify.breakpoint.height
     },
-    playersGame () {
+    playersGame() {
       return Object.values(this.playersOld !== undefined ? this.playersOld : this.players).sort(
         (a, b) =>
           a.payout > 0 && b.payout > 0
@@ -246,7 +271,7 @@ export default {
   },
 
   watch: {
-    playing (isPlaying, wasPlaying) {
+    playing(isPlaying, wasPlaying) {
       if (!wasPlaying && isPlaying && this.active) {
         this.currentPayoutInterval = setInterval(() => {
           this.currentPayout = this.calculatePayout(get(this.multiplayerGame, 'gameable.start_time_unix'), this.getCurrentTime())
@@ -259,7 +284,7 @@ export default {
     }
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     this.soundStop(launchSound)
     this.active = false
     if (this.tb) clearTimeout(this.tb)
@@ -267,7 +292,7 @@ export default {
     window.removeEventListener('resize', () => this.onResize)
   },
 
-  created () {
+  created() {
     this.init()
     window.addEventListener('resize', () => this.onResize)
   },
@@ -276,7 +301,7 @@ export default {
     ...mapActions({
       updateUserAccountBalance: 'auth/updateUserAccountBalance'
     }),
-    async init () {
+    async init() {
       const loadImage = (src) => new Promise((resolve) => {
         const i = new Image()
         i.onload = () => {
@@ -295,25 +320,25 @@ export default {
       this.ready = true
       this.$nextTick(this.onAnimation)
     },
-    async makeBet (bet) {
+    async makeBet(bet) {
       this.loading = true
       this.sound(clickSound)
       this.updateUserAccountBalance(this.account.balance - bet)
       try {
         const { data: game } = await axios.post(this.getRoute('bet').replace('{multiplayerGame}', `${this.multiplayerGame.id}`), { bet })
-      } catch (e) {}
+      } catch (e) { }
       this.loading = false
     },
-    async cashOut () {
+    async cashOut() {
       this.loading = true
       this.sound(clickSound)
       try {
         const { data: game } = await axios.post(this.getRoute('cash-out').replace('{multiplayerGame}', `${this.multiplayerGame.id}`))
         this.sound(this.config.sounds.win || winSound)
-      } catch (e) {}
+      } catch (e) { }
       this.loading = false
     },
-    initStatiSprites () {
+    initStatiSprites() {
       this.animation.airplaneLastDelay = 0
       this.animation.cloudLastDelay = 0
       for (let i = 0; i < this.airplanesCount; i++) {
@@ -349,11 +374,11 @@ export default {
         })
       }
     },
-    beforeEnter (el) {
+    beforeEnter(el) {
       el.style.opacity = 0
       el.style.height = 0
     },
-    enter (el, done) {
+    enter(el, done) {
       const delay = el.dataset.index * 150
       setTimeout(function () {
         anime({
@@ -364,7 +389,7 @@ export default {
         }).finished.then(done)
       }, delay)
     },
-    leave (el, done) {
+    leave(el, done) {
       const delay = el.dataset.index * 150
       setTimeout(function () {
         anime({
@@ -375,11 +400,11 @@ export default {
         }).finished.then(done)
       }, delay)
     },
-    beforeEnterC (el) {
+    beforeEnterC(el) {
       el.style.opacity = 0
       el.style.width = 0
     },
-    enterC (el, done) {
+    enterC(el, done) {
       el.style.opacity = ''
       setTimeout(function () {
         anime({
@@ -389,7 +414,7 @@ export default {
         }).finished.then(done)
       }, 300)
     },
-    leaveC (el, done) {
+    leaveC(el, done) {
       el.style.opacity = 0
       setTimeout(function () {
         anime({
@@ -399,15 +424,15 @@ export default {
         }).finished.then(done)
       }, 300)
     },
-    futurePlanBetting (t) {
+    futurePlanBetting(t) {
       if (this.tb) clearTimeout(this.tb)
       this.tb = setTimeout(this.onBettingStart, t)
     },
-    futurePlanGame (t) {
+    futurePlanGame(t) {
       if (this.tg) clearTimeout(this.tg)
       this.tg = setTimeout(this.onGameStart, t)
     },
-    onGameInit (event) {
+    onGameInit(event) {
       // console.log('onGameInit', event)
 
       this.timeDiff = event.time - Date.now()
@@ -420,12 +445,12 @@ export default {
       const timeUntilGameStart = Math.max(0, get(this.multiplayerGame, 'gameable.start_time_unix') - this.getCurrentTime())
       this.futurePlanGame(timeUntilGameStart)
     },
-    onBettingStart () {
+    onBettingStart() {
       this.betting = true
       this.playing = false
       this.playersOld = undefined
     },
-    onGameStart () {
+    onGameStart() {
       this.sound(launchSound)
       this.initStatiSprites()
       this.betting = false
@@ -434,7 +459,7 @@ export default {
       this.animation.explode = 0
       this.animation.opacity = 1
     },
-    onEvent (event) {
+    onEvent(event) {
       if (!this.active) return
       // console.log('onEvent', event)
 
@@ -466,18 +491,18 @@ export default {
         this.updateUserAccountBalance(this.user.account.balance + get(this.players, `${this.user.id}.win`, 0))
       }
     },
-    calculatePayout (startTime, endTime) {
+    calculatePayout(startTime, endTime) {
       const duration = (endTime - startTime) / 1000
       return Math.round(Math.pow(this.baseNumber, duration) * 100) / 100
     },
-    calculatePayoutPrecisely (startTime, endTime) {
+    calculatePayoutPrecisely(startTime, endTime) {
       const duration = (endTime - startTime) / 1000
       return Math.pow(this.baseNumber, duration)
     },
-    getCurrentTime () {
+    getCurrentTime() {
       return Date.now() + this.timeDiff
     },
-    explode () {
+    explode() {
       if (!this.animation.explode && !this.animation.exploded) {
         this.soundStop(launchSound)
         this.sound(this.config.sounds.crash || crashSound)
@@ -500,7 +525,7 @@ export default {
         while (this.animation.clouds.length) this.animation.clouds.pop()
       }
     },
-    onAnimation () {
+    onAnimation() {
       if (!this.active) return
       if (this.$refs.bgCanvas) {
         const context = this.$refs.bgCanvas.getContext('2d')
@@ -672,7 +697,7 @@ export default {
       }
       requestAnimationFrame(this.onAnimation)
     },
-    onResize () {
+    onResize() {
       this.height = window.innerWidth < 1200 ? 500 : 720
     }
   }
@@ -680,220 +705,287 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .game-container {
-      position: relative;
-      max-width: 1200px;
-      margin: 0 auto;
+.game-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 30px;
   }
 
-  .game-view {
-      position: relative;
-      // max-width: 900px;
+  &.provably {
+    left: 455px;
+    top: 30px;
+  }
 
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
+    }
+  }
+}
+
+.game-view {
+  position: relative;
+  // max-width: 900px;
+
+
+  @media (max-width: 1200px) {
+    // max-width: calc(100vw - 300px - 32px - 8px);
+    padding-bottom: 10px;
+  }
+
+  @media (max-width: 959px) {
+    min-height: calc(100vh - 140px);
+  }
+
+  .last-crashed {
+    color: var(--v-primary-lighten4);
+    font-size: .9em;
+    position: absolute;
+    background: var(--v-primary-darken4);
+    padding: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10px;
+
+    li {
+      opacity: 1;
+      transition: opacity .3s;
+      position: relative;
+
+      div {
+        margin: 0 2px;
+      }
+
+      &:after {
+        content: ' ';
+        position: absolute;
+        top: 0;
+        left: 1px;
+        right: 1px;
+        bottom: 0;
+        background: var(--v-accent-base);
+        opacity: 0.1;
+      }
+    }
+
+    li:nth-child(2) {
+      opacity: 0.8;
+    }
+
+    li:nth-child(3) {
+      opacity: 0.7;
+    }
+
+    li:nth-child(4) {
+      opacity: 0.6;
+    }
+
+    li:nth-child(5) {
+      opacity: 0.5;
+    }
+  }
+
+
+  .game-status {
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    z-index: 2;
+    transform: translate(-50%, 0%);
+
+    // background: linear-gradient(180deg, #1a003d20 -20%, #7b48c520 45%, #9761e130 100%);
+    .game-payout {
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      box-shadow: inset 0 -4px 1px rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+
+      @media(max-width: 767px) {
+        .text-h3 {
+          font-size: 28px !important;
+          line-height: 1 !important;
+        }
+      }
+    }
+  }
+
+  .animation {
+    width: calc(100% - 0px);
+    position: relative;
+    height: 50vh;
+
+    .subanimation {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .planet {
+      position: absolute;
+      top: 0;
+      right: 0;
 
       @media (max-width: 1200px) {
-          // max-width: calc(100vw - 300px - 32px - 8px);
-          padding-bottom: 10px;
+        width: 40px;
+        height: 40px;
+
+        image {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+
+    .rocket {
+      position: absolute;
+      z-index: 9;
+
+      @media (max-width: 1200px) {
+        width: 80px;
+        height: 80px;
+
+        image {
+          width: 80px;
+          height: 80px;
+        }
+      }
+    }
+
+    .rocket-stay {
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(45deg);
+
+      @media (max-width: 1200px) {
+        width: 80px;
+        height: 80px;
+
+        image {
+          width: 80px;
+          height: 80px;
+        }
+      }
+    }
+
+    @keyframes explosion-animation {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
       }
 
-      @media (max-width: 959px){
-        min-height: calc(100vh - 140px);
+      50% {
+        transform: translate(-50%, -50%) scale(1.5);
       }
 
-      .last-crashed {
-          color: var(--v-primary-lighten4);
-          font-size: .9em;
-          position: absolute;
-          background: var(--v-primary-darken4);
-          padding: 6px;
-          left: 50%;
-          transform: translateX(-50%);
-          top: 10px;
-          li {
-              opacity: 1;
-              transition: opacity .3s;
-              position: relative;
-
-              div {
-                  margin: 0 2px;
-              }
-
-              &:after {
-                  content: ' ';
-                  position: absolute;
-                  top: 0;
-                  left: 1px;
-                  right: 1px;
-                  bottom: 0;
-                  background: var(--v-accent-base);
-                  opacity: 0.1;
-              }
-          }
-
-          li:nth-child(2) {
-              opacity: 0.8;
-          }
-
-          li:nth-child(3) {
-              opacity: 0.7;
-          }
-
-          li:nth-child(4) {
-              opacity: 0.6;
-          }
-
-          li:nth-child(5) {
-              opacity: 0.5;
-          }
+      100% {
+        transform: translate(-50%, -50%) scale(0.5);
       }
+    }
 
-      .game-status {
-        position: absolute;
-        left: 50%;
-        top: 20%;
-        z-index: 2;
-        transform: translate(-50%, 0%);
-        // background: linear-gradient(180deg, #1a003d20 -20%, #7b48c520 45%, #9761e130 100%);
-        .game-payout{
-          padding: 8px 20px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 16px;
-          box-shadow: inset 0 -4px 1px rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(4px);
-          @media(max-width: 767px) {
-            .text-h3 {
-              font-size: 28px !important;
-              line-height: 1 !important;
-            }
-          }
+    .explosion {
+      position: absolute;
+      transform: translate(-50%, -50%) scale(0.5);
+      transform-origin: center;
+      animation-name: explosion-animation;
+      animation-duration: 1s;
+      animation-iteration-count: 1;
+
+      @media (max-width: 1200px) {
+        width: 40px;
+        height: 40px;
+
+        image {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+
+    .airplane,
+    .cloud {
+      opacity: 0;
+      position: absolute;
+      transition: opacity 0.3s;
+    }
+
+    @media (max-width: 1200px) {
+      .cloud {
+        width: 40px;
+        height: 40px;
+
+        image {
+          width: 30px;
+          height: 30px;
         }
       }
 
-      .animation {
-        width: calc(100% - 0px);
-        position: relative;
-        height: 50vh;
+      .airplane {
+        width: 40px;
+        height: 40px;
 
-        .subanimation {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          overflow: hidden;
+        image {
+          width: 40px;
+          height: 40px;
         }
-
-        canvas {
-              width: 100%;
-              height: 100%;
-          }
-
-          .planet {
-              position: absolute;
-              top: 0;
-              right: 0;
-              @media (max-width: 1200px) {
-                  width: 40px;
-                  height: 40px;
-                  image {
-                      width: 40px;
-                      height: 40px;
-                  }
-              }
-          }
-
-          .rocket {
-              position: absolute;
-              z-index: 9;
-              @media (max-width: 1200px) {
-                  width: 80px;
-                  height: 80px;
-                  image {
-                      width: 80px;
-                      height: 80px;
-                  }
-              }
-          }
-
-          .rocket-stay {
-              position: absolute;
-              transform: translate(-50%, -50%) rotate(45deg);
-              @media (max-width: 1200px) {
-                  width: 80px;
-                  height: 80px;
-                  image {
-                      width: 80px;
-                      height: 80px;
-                  }
-              }
-          }
-
-          @keyframes explosion-animation {
-              0% {
-                  transform: translate(-50%, -50%) scale(1);
-              }
-
-              50% {
-                  transform: translate(-50%, -50%) scale(1.5);
-              }
-
-              100% {
-                  transform: translate(-50%, -50%) scale(0.5);
-              }
-          }
-
-          .explosion {
-              position: absolute;
-              transform: translate(-50%, -50%) scale(0.5);
-              transform-origin: center;
-              animation-name: explosion-animation;
-              animation-duration: 1s;
-              animation-iteration-count: 1;
-              @media (max-width: 1200px) {
-                  width: 40px;
-                  height: 40px;
-                  image {
-                      width: 40px;
-                      height: 40px;
-                  }
-              }
-          }
-
-          .airplane,
-          .cloud {
-              opacity: 0;
-              position: absolute;
-              transition: opacity 0.3s;
-          }
-          @media (max-width: 1200px) {
-            .cloud {
-              width: 40px;
-              height: 40px;
-              image {
-                  width: 30px;
-                  height: 30px;
-              }
-            }
-            .airplane {
-              width: 40px;
-              height: 40px;
-              image {
-                  width: 40px;
-                  height: 40px;
-              }
-            }
-          }
       }
+    }
   }
-  .players-container {
-      .list {
-          overflow: hidden;
-          overflow-y: overlay;
-          max-height: calc(100vh - 50px);
+}
 
-          &::-webkit-scrollbar {
-            width: 5px;
-          }
-      }
+.players-container {
+  .list {
+    overflow: hidden;
+    overflow-y: overlay;
+    max-height: calc(100vh - 50px);
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
   }
+}
 </style>

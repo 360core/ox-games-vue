@@ -38,6 +38,14 @@
       </v-btn-toggle>
     </div>
     <play-controls ref="controls" :loading="loading" :playing="playing" :disabled="!formIsValid || !is_ready" @play="play" />
+    <modal-info v-model="modalInfo">
+      <!-- <slot name="info" /> -->
+      <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+      <info />
+    </modal-info>
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`">
+    </div>
   </div>
 </template>
 
@@ -59,16 +67,20 @@ import hit1Sound from 'packages/heads-or-tails/resources/audio/hit1.wav'
 import hit2Sound from 'packages/heads-or-tails/resources/audio/hit2.wav'
 import PlayControls from '~/components/Games/PlayControls'
 import GameMessage from '~/components/Games/GameMessage'
+import Info from './info'
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
 
 export default {
   name: 'HeadsOrTails',
 
-  components: { GameMessage, PlayControls },
+  components: { GameMessage, PlayControls,Info, ModalInfo },
 
   mixins: [FormMixin, GameMixin, SoundMixin],
 
   data () {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
+      modalInfo: false,
       clickSound,
       winSound,
       loseSound,
@@ -429,4 +441,53 @@ export default {
       transform: translateX(-50%);
     }
   }
+   .button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 40px;
+  }
+
+  &.provably {
+    left: 455px;
+    top: 30px;
+  }
+
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
+    }
+  }
+}
 </style>

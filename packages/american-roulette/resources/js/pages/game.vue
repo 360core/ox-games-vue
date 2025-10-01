@@ -1046,6 +1046,14 @@
         </template>
       </play-controls>
     </div>
+    <modal-info v-model="modalInfo">
+      <!-- <slot name="info" /> -->
+      <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+      <info />
+    </modal-info>
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`">
+    </div>
   </div>
 </template>
 
@@ -1069,13 +1077,14 @@ import stopSound from 'packages/american-roulette/resources/audio/stop.wav'
 import PlayControls from '~/components/Games/PlayControls'
 import GameMessage from '~/components/Games/GameMessage'
 import ballImg from 'packages/american-roulette/resources/images/ball.png'
-
+import Info from './info'
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
 export default {
   name: 'AmericanRoulette',
 
   components: {
     GameMessage,
-    PlayControls
+    PlayControls,Info, ModalInfo
   },
 
   directives: {
@@ -1086,6 +1095,8 @@ export default {
 
   data () {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
+      modalInfo: false,
       clickSound,
       betSound,
       unbetSound,
@@ -2736,4 +2747,53 @@ export default {
     position: relative;
     z-index: 10;
   }
+     .button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 40px;
+  }
+
+  &.provably {
+    left: 455px;
+    top: 30px;
+  }
+
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
+    }
+  }
+}
 </style>

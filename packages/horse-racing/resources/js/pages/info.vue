@@ -1,26 +1,9 @@
 <template>
-  <v-card>
-    <v-toolbar>
-      <v-toolbar-title>
-        {{ $t('Game information') }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn icon @click="$emit('close')">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-      <template v-slot:extension>
-        <v-tabs v-model="infoTab" centered hide-slider>
-          <v-tab href="#tab-about">
-            {{ $t('How to play') }}
-          </v-tab>
-        </v-tabs>
-      </template>
-    </v-toolbar>
-    <v-tabs-items v-model="infoTab">
-      <v-tab-item value="tab-about">
-        <v-card flat>
-          <v-card-text class="about-text">
-            <p>
+  <div>
+    <h5>
+      {{ $t('How to play') }}
+    </h5>
+    <p>
               {{ $t('The objective of the game is to correctly guess which horse will finish in a place, i.e. finish first, second or third.') }}
               {{ $t('You can bet on several horses thus increasing your chances to win.') }}
             </p>
@@ -43,12 +26,9 @@
               {{ $t('Payouts are displayed to the right of the bet input field.') }}
               {{ $t('They differ depending on which bet and horse you choose.') }}
             </p>
-          </v-card-text>
-        </v-card>
-      </v-tab-item>
-    </v-tabs-items>
-  </v-card>
+  </div>
 </template>
+
 
 <script>
 export default {

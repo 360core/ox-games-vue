@@ -1,39 +1,19 @@
 <template>
   <div v-if="deckIsLoaded" class="d-flex flex-column fill-height">
-    <game-room
-      :playing="playing"
-      @room="onRoomChange($event.room)"
-      @game="onGame($event.game)"
-      @event="onEvent($event.event)"
-      @players="onPlayers($event.players)"
-      @player-joined="onPlayerJoined($event.player)"
-      @player-left="onPlayerLeft($event.player)"
-      @ready="ready = $event.ready"
-      @exit="onExit"
-    />
+    <game-room :playing="playing" @room="onRoomChange($event.room)" @game="onGame($event.game)"
+      @event="onEvent($event.event)" @players="onPlayers($event.players)" @player-joined="onPlayerJoined($event.player)"
+      @player-left="onPlayerLeft($event.player)" @ready="ready = $event.ready" @exit="onExit" />
     <template v-if="room">
       <div id="opponent-hands" class="d-flex justify-space-around mt-2">
-        <hand
-          v-for="(opponent, i) in opponents"
-          :key="i"
-          :cards="opponent.cards"
-          :score="opponent.score"
+        <hand v-for="(opponent, i) in opponents" :key="i" :cards="opponent.cards" :score="opponent.score"
           :result="opponent.score > 0 && !playing ? resultMessage(opponent) : opponent.result"
-          :result-class="resultClass(opponent)"
-          :bet="opponent.bet"
-          :win="opponent.win"
-        >
+          :result-class="resultClass(opponent)" :bet="opponent.bet" :win="opponent.win">
           <template v-slot:title>
             <div class="font-weight-thin text-center mb-2 ml-n10 ml-lg-0">
               {{ opponent.name }}
-              <v-progress-circular
-                v-show="isOpponentTurn(opponent)"
-                :rotate="360"
-                :size="25"
-                :width="2"
+              <v-progress-circular v-show="isOpponentTurn(opponent)" :rotate="360" :size="25" :width="2"
                 :value="isOpponentTurn(opponent) ? Math.round(100 * (opponent.action_end - time) / actionDuration) : 0"
-                color="primary"
-              >
+                color="primary">
                 {{ opponent.action_end - time }}
               </v-progress-circular>
             </div>
@@ -41,68 +21,47 @@
         </hand>
       </div>
       <div class="d-flex justify-center fill-height align-center">
-        <hand
-          v-if="player.cards"
-          :cards="player.cards"
-          :score="player.score"
+        <hand v-if="player.cards" :cards="player.cards" :score="player.score"
           :result="player.score > 0 && !playing ? resultMessage(player) : player.result"
-          :result-class="resultClass(player)"
-          :bet="player.bet"
-          :win="player.win"
-        />
+          :result-class="resultClass(player)" :bet="player.bet" :win="player.win" />
       </div>
       <div class="d-flex justify-center align-center flex-wrap">
-        <v-btn
-          :disabled="isActionDisabled('stand')"
-          :loading="action === 'stand'"
-          class="mx-1 my-2 my-lg-0 action-button"
-          small
-          @click="doAction('stand')"
-        >
+        <v-btn :disabled="isActionDisabled('stand')" :loading="action === 'stand'"
+          class="mx-1 my-2 my-lg-0 action-button" small @click="doAction('stand')">
           {{ $t('Stand') }}
         </v-btn>
-        <v-progress-circular
-          :rotate="360"
-          :size="40"
-          :width="3"
+        <v-progress-circular :rotate="360" :size="40" :width="3"
           :value="isPlayerTurn ? Math.round(100 * (player.action_end - time) / actionDuration) : 0"
-          :color="isPlayerTurn? (time < player.action_end - finalHitThreshold ? 'primary' : 'error') : 'secondary'"
-          class="mx-2"
-        >
+          :color="isPlayerTurn ? (time < player.action_end - finalHitThreshold ? 'primary' : 'error') : 'secondary'"
+          class="mx-2">
           {{ isPlayerTurn ? player.action_end - time : 0 }}
         </v-progress-circular>
-        <v-btn
-          :disabled="isActionDisabled('hit')"
-          :loading="action === 'hit'"
-          class="mx-1 my-2 my-lg-0 action-button"
-          small
-          @click="doAction('hit')"
-        >
+        <v-btn :disabled="isActionDisabled('hit')" :loading="action === 'hit'" class="mx-1 my-2 my-lg-0 action-button"
+          small @click="doAction('hit')">
           {{ $t('Hit') }}
         </v-btn>
       </div>
       <div class="d-flex justify-center my-2">
-        <v-btn
-          color="primary"
-          :loading="action === 'play'"
-          :disabled="!ready || !balanceIsSufficient || playing"
-          @click="doAction('play')"
-        >
+        <v-btn color="primary" :loading="action === 'play'" :disabled="!ready || !balanceIsSufficient || playing"
+          @click="doAction('play')">
           {{ $t('Play') }}
         </v-btn>
-        <v-btn
-          v-if="cancelAllowed"
-          color="red"
-          :loading="action === 'cancel'"
-          :disabled="!!action"
-          class="ml-3"
-          @click="doAction('cancel')"
-        >
+        <v-btn v-if="cancelAllowed" color="red" :loading="action === 'cancel'" :disabled="!!action" class="ml-3"
+          @click="doAction('cancel')">
           {{ $t('Cancel') }}
         </v-btn>
       </div>
     </template>
+    <modal-info v-model="modalInfo">
+      <!-- <slot name="info" /> -->
+      <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+      <info />
+    </modal-info>
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`">
+    </div>
   </div>
+
   <div v-else class="d-flex fill-height justify-center align-center">
     <block-preloader />
   </div>
@@ -126,16 +85,20 @@ import loseSound from 'packages/multiplayer-blackjack/resources/audio/lose.wav'
 import pushSound from 'packages/multiplayer-blackjack/resources/audio/push.wav'
 import GameRoom from '~/components/Games/GameRoom'
 import BlockPreloader from '~/components/BlockPreloader'
+import Info from './info'
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
 
 export default {
   name: 'MultiplayerBlackjack',
 
-  components: { BlockPreloader, GameRoom, Hand },
+  components: { BlockPreloader, GameRoom, Hand, Info, ModalInfo },
 
   mixins: [FormMixin, GameMixin, SoundMixin],
 
-  data () {
+  data() {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
+      modalInfo: false,
       ready: false,
       room: null,
       game: null,
@@ -161,31 +124,31 @@ export default {
 
   computed: {
     ...mapState('auth', ['account', 'user']),
-    actionDuration () {
+    actionDuration() {
       return parseInt(config('multiplayer-blackjack.action_duration'), 10)
     },
-    finalHitThreshold () {
+    finalHitThreshold() {
       return parseInt(config('multiplayer-blackjack.final_hit_threshold'), 10)
     },
-    cancelThreshold () {
+    cancelThreshold() {
       return parseInt(config('multiplayer-blackjack.cancel_threshold'), 10)
     },
-    isPlayerTurn () {
+    isPlayerTurn() {
       return this.time && this.player.action_start && this.player.action_end && this.player.action_start <= this.time && this.time < this.player.action_end
     },
-    bet () {
+    bet() {
       return this.room ? this.room.parameters.bet : 0
     },
-    playersCount () {
+    playersCount() {
       return this.room ? parseInt(this.room.parameters.players_count, 10) : 0
     },
-    balanceIsSufficient () {
+    balanceIsSufficient() {
       return this.account.balance >= this.bet
     },
-    winnersCount () {
+    winnersCount() {
       return [this.player.win || 0, ...Object.keys(this.opponents).map(id => this.opponents[id].win)].filter(win => win > 0).length
     },
-    cancelAllowed () {
+    cancelAllowed() {
       return this.playing
         && this.opponents
         && this.time
@@ -196,12 +159,12 @@ export default {
   },
 
   watch: {
-    time (time, prevTime) {
+    time(time, prevTime) {
       if (this.playing && !this.action && time === this.player.action_end && prevTime === this.player.action_end - 1) {
         this.doAction('stand')
       }
     },
-    playing (playing, wasPlaying) {
+    playing(playing, wasPlaying) {
       // clear action time interval when the game is completed
       if (wasPlaying && !playing) {
         this.clearActionTimeInterval()
@@ -209,7 +172,7 @@ export default {
     }
   },
 
-  async created () {
+  async created() {
     await this.loadCardDeck()
     this.deckIsLoaded = true
   },
@@ -218,16 +181,16 @@ export default {
     ...mapActions({
       updateUserAccountBalance: 'auth/updateUserAccountBalance'
     }),
-    isOpponentTurn (opponent) {
+    isOpponentTurn(opponent) {
       return this.time && opponent.action_start && opponent.action_end && opponent.action_start <= this.time && this.time <= opponent.action_end
     },
-    updatePlayerHand (player, values) {
+    updatePlayerHand(player, values) {
       Object.keys(values).forEach(key => {
         player[key] = values[key]
       })
     },
     // handle game actions (play, hit, stand)
-    async doAction (action) {
+    async doAction(action) {
       this.action = action
 
       // clear previous game results
@@ -274,13 +237,13 @@ export default {
       // enable action time interval
       this.enableActionTimeInterval(game.server_time)
     },
-    isActionDisabled (action) {
+    isActionDisabled(action) {
       return !!this.action
         || (action === 'hit' && this.player.score >= 21)
         || !this.isPlayerTurn
         || Object.keys(this.opponents).length < this.playersCount - 1
     },
-    enableActionTimeInterval (time) {
+    enableActionTimeInterval(time) {
       if (!this.intervalId) {
         this.time = Math.floor(time / 1000)
 
@@ -289,17 +252,17 @@ export default {
         }, 1000)
       }
     },
-    clearActionTimeInterval () {
+    clearActionTimeInterval() {
       if (this.intervalId) {
         clearInterval(this.intervalId)
         this.intervalId = null
         this.time = null
       }
     },
-    resultClass (player) {
+    resultClass(player) {
       return player.score > 0 ? (player.win > 0 ? (this.winnersCount === 1 ? 'primary text--primary' : 'warning') : 'error') : 'secondary'
     },
-    resultMessage (player) {
+    resultMessage(player) {
       return player.win > 0
         ? (player.score === 21 && player.cards.length === 2
           ? this.$t('Blackjack')
@@ -308,10 +271,10 @@ export default {
             : this.$t('Push')))
         : this.$t('Lose')
     },
-    onRoomChange (room) {
+    onRoomChange(room) {
       this.room = room
     },
-    onPlayers (players) {
+    onPlayers(players) {
       // loop through player hands
       players.forEach(player => {
         // if the hand belongs to the current user
@@ -331,7 +294,7 @@ export default {
               this.enableActionTimeInterval(Date.now() + this.serverTimeDiff)
             }
           }, 100)
-        // if the hand DOES NOT belong to the current user
+          // if the hand DOES NOT belong to the current user
         } else {
           // set the opponent hand to default values
           this.$set(this.opponents, player.id, { ...this.defaultHand, name: player.name })
@@ -344,7 +307,7 @@ export default {
         }
       })
     },
-    onPlayerJoined (player) {
+    onPlayerJoined(player) {
       // if this player didn't join earlier
       if (!this.opponents[player.id]) {
         this.$set(this.opponents, player.id, { ...this.defaultHand, name: player.name })
@@ -354,17 +317,17 @@ export default {
         if (Object.keys(this.opponents).length + 1 === this.playersCount) {
           this.updatePlayerHand(this.player, { result: this.$t('Click Play') })
         }
-      // if this player already exists (probably left and joined again)
+        // if this player already exists (probably left and joined again)
       } else {
         this.updatePlayerHand(this.opponents[player.id], { result: '' })
       }
     },
-    onPlayerLeft (player) {
+    onPlayerLeft(player) {
       // add a message when a player leaves the room (it also happens when the page is refreshed)
       this.updatePlayerHand(this.opponents[player.id], { result: this.$t('Left') })
     },
     // called when the page is refreshed
-    onGame (game) {
+    onGame(game) {
       this.game = game
       this.serverTimeDiff = game.server_time - Date.now()
 
@@ -385,7 +348,7 @@ export default {
         this.playing = true
       }
     },
-    onEvent (event) {
+    onEvent(event) {
       if (event.action !== 'cancel') {
         // loop through player hands
         Object.keys(event.gameable.hands).forEach(userId => {
@@ -396,7 +359,7 @@ export default {
               action_end: event.gameable.hands[userId].action_end,
               win: event.gameable.hands[userId].win
             })
-          // if the hand DOES NOT belong to the current user
+            // if the hand DOES NOT belong to the current user
           } else if (typeof this.opponents[userId] !== 'undefined') {
             // deal sound
             if (event.gameable.hands[userId].cards.length > this.opponents[userId].cards.length) {
@@ -418,22 +381,22 @@ export default {
         if (this.winnersCount > 1) {
           this.sound(this.config.sounds.lose || pushSound)
           this.updateUserAccountBalance(this.account.balance + this.player.win)
-        // player wins
+          // player wins
         } else if (this.player.win > 0) {
           this.sound(this.config.sounds.win || winSound)
           this.updateUserAccountBalance(this.account.balance + this.player.win)
-        // player loses
+          // player loses
         } else {
           this.sound(this.config.sounds.lose || loseSound)
         }
-      // if game is cancelled
+        // if game is cancelled
       } else if (event.game.is_cancelled) {
         this.playing = false
       } else {
         this.enableActionTimeInterval(event.game.server_time)
       }
     },
-    onExit () {
+    onExit() {
       this.game = null
       this.player = {}
       this.opponents = {}
@@ -445,11 +408,61 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  #opponent-hands {
-    min-height: 160px;
+#opponent-hands {
+  min-height: 160px;
+}
+
+.action-button {
+  width: 80px;
+}
+
+.button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 40px;
   }
 
-  .action-button {
-    width: 80px;
+  &.provably {
+    left: 455px;
+    top: 30px;
   }
+
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
+    }
+  }
+}
 </style>

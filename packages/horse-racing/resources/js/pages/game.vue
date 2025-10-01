@@ -173,6 +173,14 @@
       </div>
     </div>
     <block-preloader v-else />
+    <modal-info v-model="modalInfo">
+      <!-- <slot name="info" /> -->
+      <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+      <info />
+    </modal-info>
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`">
+    </div>
   </div>
 </template>
 
@@ -202,16 +210,20 @@ import imgGrass from 'packages/horse-racing/resources/images/grass.jpg'
 import imgSand from 'packages/horse-racing/resources/images/sand.jpg'
 import imgFence from 'packages/horse-racing/resources/images/fence.png'
 import imgFencePost from 'packages/horse-racing/resources/images/fence_post.png'
+import Info from './info'
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
 
 export default {
   name: 'HorseRacing',
 
-  components: { BlockPreloader },
+  components: { BlockPreloader,Info, ModalInfo },
 
   mixins: [FormMixin, GameMixin, SoundMixin],
 
   data() {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
+      modalInfo: false,
       loading: false,
       playing: false,
       ready: false,
@@ -784,5 +796,54 @@ export default {
 }
 .flip-list-move {
   transition: transform 0.1s;
+}
+.button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 40px;
+  }
+
+  &.provably {
+    left: 455px;
+    top: 30px;
+  }
+
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
+    }
+  }
 }
 </style>

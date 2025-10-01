@@ -8,6 +8,14 @@
     </div>
     <play-controls ref="controls" :loading="loading" :playing="playing" :disabled="!formIsValid" :class="{loading: !ready}" @play="play" />
     <block-preloader v-if="!ready" />
+    <modal-info v-model="modalInfo">
+      <!-- <slot name="info" /> -->
+      <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+      <info />
+    </modal-info>
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`">
+    </div>
   </div>
 </template>
 
@@ -27,16 +35,19 @@ import BlockPreloader from '~/components/BlockPreloader'
 import GameMessage from '~/components/Games/GameMessage'
 
 import Plinko from './helpers/plinko.js'
-
+import Info from './info'
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
 export default {
   name: 'Plinko',
 
-  components: { BlockPreloader, PlayControls, GameMessage },
+  components: { BlockPreloader, PlayControls, GameMessage,Info, ModalInfo  },
 
   mixins: [FormMixin, GameMixin, SoundMixin],
 
   data () {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
+      modalInfo: false,
       clickSound,
       formIsValid: true,
       loading: false,
@@ -155,4 +166,53 @@ export default {
       transform: translateX(-50%);
     }
   }
+    .button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 40px;
+  }
+
+  &.provably {
+    left: 455px;
+    top: 30px;
+  }
+
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
+    }
+  }
+}
 </style>

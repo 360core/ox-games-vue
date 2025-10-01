@@ -39,19 +39,20 @@ export default {
 }
 .modal {
     position: absolute;
-    max-width: calc(100vw - 64px);
+    max-width: calc(1200px - 64px);
     max-height: calc(100vh - 64px);
+    width: 100%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(0,0,0,0.25);
     transform-origin: center;
-    /* transform: translate(-50%, -50%) scale(0.9); */
+   transform: translate(-50%, -50%) scale(0.9); 
     overflow: auto;
     border-radius: 32px;
     border: 3px solid #ffb438;
     font-size: 16px;
-    padding: 32px 48px;
+    padding: 40px 40px;
     box-shadow: 0 0 32px -8px #ffb438;
     color: #d3c9b7;
     &::v-deep {
@@ -134,4 +135,12 @@ export default {
     transform: translate(-50%, -50%) scale(0.9);
   }
 }
+
+      @media(max-width: 767px) {
+     .modal {
+    padding: 16px 16px;
+
+   
+}
+      }
 </style>
