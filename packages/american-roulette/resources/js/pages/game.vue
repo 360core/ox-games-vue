@@ -1052,7 +1052,7 @@
       <info />
     </modal-info>
     <div class="button-mini game-info" @click="modalInfo = true">
-      <img :src="`${imageBaseUrl}/info.png`">
+      <img :src="`${imageBaseUrl}/info.png`" alt="info" style="cursor: pointer;" />
     </div>
   </div>
 </template>

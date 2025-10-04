@@ -4,13 +4,13 @@
     <system-bar
       v-if="!(isMobile && (isGamePage || isPredictionPage || isProviderGamePage)) && systemBarEnabled && authenticated" />
 
-    <v-navigation-drawer border="0" v-model="navigationDrawer" :mini-variant.sync="isMobile  ? false : miniVariant" app
+    <v-navigation-drawer border="0" v-model="navigationDrawer" :mini-variant.sync="isMobile ? false : miniVariant" app
       :permanent="!isMobile" :temporary="isMobile" :color="navBarBackground" :width="miniVariant ? '260px' : '260px'"
       :class="[
         //  { 'gameplaying': playing },
 
         miniVariant ? 'px-3' : 'px-4',
-        isMobile ?( isGamePage || isPredictionPage || isProviderGamePage ? 'game-page1' : 'with-header') : ''
+        isMobile ? (isGamePage || isPredictionPage || isProviderGamePage ? 'game-page1' : 'with-header') : ''
         // { 'game-page': isGamePage }
       ]" class="border-0">
       <!-- :permanent="navbarVisible"
@@ -581,93 +581,14 @@
         <span class="text-xs font-bold text-neutral-500">Explore</span>
       </div>
       <div class="shrink-0">
-        <a class="flex flex-col gap-1 items-center text-white" href="/games/american-roulette">
-          <svg viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="20"
-            height="20">
-            <g>
-              <g>
-                <path d="M171.58,397.714l-53.677,73.88C153.8,494.635,195.831,508.941,241,511.551v-91.24
-                  C215.811,418.03,192.24,410.068,171.58,397.714z" fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M407.629,321.039c-9.8,22.761-24.579,42.891-42.96,59.012l53.681,73.885c33.585-27.579,60.024-63.536,76.125-104.679
-                  L407.629,321.039z" fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path
-                  d="M117.903,40.407l53.676,73.88C192.24,101.932,215.811,93.97,241,91.689V0.449C195.831,3.06,153.8,17.366,117.903,40.407z"
-                  fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path
-                  d="M256,121c-74.439,0-135,60.561-135,135s60.561,135,135,135s135-60.561,135-135S330.439,121,256,121z M301,256
-                  c0,6.939-1.581,13.515-4.398,19.39l44.25,44.25l-21.213,21.213l-44.251-44.25C269.514,299.419,262.939,301,256,301
-                  c-6.939,0-13.514-1.581-19.389-4.398l-44.25,44.25l-21.213-21.213l44.25-44.25C212.581,269.514,211,262.939,211,256
-                  c0-6.939,1.581-13.514,4.398-19.389l-44.25-44.25l21.213-21.213l44.25,44.25C242.486,212.581,249.061,211,256,211
-                  c6.939,0,13.514,1.581,19.389,4.398l44.251-44.25l21.213,21.213l-44.25,44.25C299.419,242.485,301,249.061,301,256z"
-                  fill="currentColor" style="
-                opacity: 0.5;
-            "></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M256,241c-8.271,0-15,6.729-15,15s6.729,15,15,15s15-6.729,15-15S264.271,241,256,241z"
-                  fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M340.42,397.714c-20.66,12.354-44.231,20.316-69.42,22.597v91.24c45.169-2.611,87.2-16.917,123.097-39.958L340.42,397.714
-                  z" fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M418.351,58.064l-53.681,73.885c18.38,16.121,33.159,36.251,42.96,59.012l86.846-28.218
-                  C478.374,121.6,451.935,85.643,418.351,58.064z" fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path
-                  d="M271,0.449v91.24c25.189,2.281,48.76,10.243,69.421,22.597l53.676-73.879C358.2,17.366,316.169,3.059,271,0.449z"
-                  fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M503.739,191.276l-86.818,28.209C419.586,231.235,421,243.455,421,256s-1.414,24.765-4.079,36.515l86.818,28.209
-                  C509.125,300.049,512,278.361,512,256C512,233.639,509.125,211.951,503.739,191.276z"
-                  fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M93.65,58.064C60.065,85.643,33.626,121.6,17.525,162.743l86.846,28.218c9.8-22.761,24.579-42.89,42.959-59.012
-                  L93.65,58.064z" fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M104.37,321.039l-86.846,28.218c16.102,41.143,42.541,77.1,76.125,104.679l53.681-73.885
-                  C128.95,363.929,114.171,343.8,104.37,321.039z" fill="currentColor"></path>
-              </g>
-            </g>
-            <g>
-              <g>
-                <path d="M95.079,219.485L8.261,191.276C2.875,211.951,0,233.639,0,256c0,22.361,2.875,44.049,8.261,64.724l86.818-28.209
-                  C92.414,280.764,91,268.545,91,256S92.414,231.236,95.079,219.485z" fill="currentColor"></path>
-              </g>
-            </g>
+        <a class="flex flex-col gap-1 items-center text-white" href="/games/multiplayer-roulette">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-ticket"
+            viewBox="0 0 16 16">
+            <path
+              d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zM1.5 4a.5.5 0 0 0-.5.5v1.05a2.5 2.5 0 0 1 0 4.9v1.05a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-1.05a2.5 2.5 0 0 1 0-4.9V4.5a.5.5 0 0 0-.5-.5z" />
           </svg>
-          <span class="text-xs font-bold text-neutral-500">Raulette</span>
+
+          <span class="text-xs font-bold text-neutral-500">Lottery</span>
         </a>
       </div>
       <div class="shrink-0" v-if="authenticated && chatEnabled">
@@ -1081,7 +1002,7 @@ body {
 }
 
 .with-header {
-   padding-top: 64px !important;
+  padding-top: 64px !important;
 }
 
 /* Game page → header skip */

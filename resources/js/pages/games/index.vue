@@ -23,6 +23,7 @@ import AnimatedBackground from '~/components/AnimatedBackground'
 import GameMenu from '~/components/Games/GameMenu'
 import GameFeed from '~/components/GameFeed'
 
+
 export default {
   middleware: ['auth', 'verified', '2fa_passed', 'game'],
 
