@@ -37,6 +37,7 @@
         <slot name="paytable" />
       </modal-info>
       <modal-info v-model="modalInfo">
+        <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
         <slot name="info" />
       </modal-info>
       <modal-info v-model="modalProvably">

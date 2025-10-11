@@ -1,19 +1,18 @@
 <template>
-  <div class="button" :class="{disabled}" @click="click">
+  <button class="button" :class="{ disabled }" :disabled="disabled" @click="click" @touchend.prevent="click">
     <div class="sprite">
-      <img class="normal" :src="`/images/games/card-game-ui/${type}.png`">
-      <img class="disabled" :src="`/images/games/card-game-ui/${type}-disabled.png`">
-      <img class="hover" :src="`/images/games/card-game-ui/${type}-hover.png`">
-      <img class="active" :src="`/images/games/card-game-ui/${type}-active.png`">
+      <img class="normal" :src="`/images/games/card-game-ui/${type}.png`" />
+      <img class="disabled" :src="`/images/games/card-game-ui/${type}-disabled.png`" />
+      <img class="hover" :src="`/images/games/card-game-ui/${type}-hover.png`" />
+      <img class="active" :src="`/images/games/card-game-ui/${type}-active.png`" />
     </div>
     <div class="btn-title">
       {{ title }}
     </div>
-  </div>
+  </button>
 </template>
 
 <script>
-
 import clickSound from '~/../audio/common/click.wav'
 import SoundMixin from '~/mixins/Sound'
 
@@ -30,12 +29,11 @@ export default {
     },
     disabled: {
       type: Boolean,
-      required: false,
       default: false
     }
   },
   methods: {
-    click () {
+    click() {
       if (!this.disabled) {
         this.sound(clickSound)
         this.$emit('click')
@@ -46,16 +44,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
-div.button {
+.button {
   width: 170px;
   height: 195px;
-  margin: 0 0px;
+  margin: 0;
   position: relative;
   cursor: pointer;
   padding: 0 5px;
+  background: none;
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
   &.disabled {
     cursor: default;
   }
+
   .sprite {
     position: absolute;
     width: 160px;
@@ -64,31 +69,37 @@ div.button {
     border-radius: 50%;
     box-shadow: 0px 5px 24px 5px rgb(0 0 0 / 75%);
   }
+
   img {
     position: absolute;
     top: 50%;
     left: 50%;
     opacity: 0;
     transition: opacity 0.15s;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
+
     &.normal {
       opacity: 1;
     }
   }
+
   &.disabled img.disabled {
     opacity: 1;
   }
+
   &:not(.disabled) {
     &:hover img.hover {
       opacity: 1;
     }
+
     &:active img.active {
       opacity: 1;
     }
   }
+
   .btn-title {
     position: absolute;
-    top: calc(100% + 2px);
+    top: calc(100% + 85px);
     left: 50%;
     transform: translate(-50%, -50%) translateZ(0px);
     font-family: consolas;
@@ -99,6 +110,7 @@ div.button {
     text-align: center;
     text-transform: uppercase;
   }
+
   &.disabled .btn-title {
     color: #adadad;
   }

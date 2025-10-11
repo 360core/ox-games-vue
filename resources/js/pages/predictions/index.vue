@@ -20,7 +20,7 @@ import PredictionMenu from '~/components/Predictions/PredictionMenu'
 export default {
   middleware: ['auth', 'verified', '2fa_passed', 'prediction'],
 
-  components: { PredictionMenu, GameFeed, AnimatedBackground },
+  components: {  GameFeed, AnimatedBackground },
 
   metaInfo () {
     return { title: this.component ? this.$t(this.component.name) : '' }

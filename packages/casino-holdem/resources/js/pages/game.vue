@@ -363,7 +363,7 @@ export default {
   .btns-panel {
     position: absolute;
     left: 50%;
-    top: -104px;
+    top: -215px;
     transform: translate(-50%, -50%);
     display: flex;
   }

@@ -2,13 +2,8 @@
   <div class="d-flex flex-column fill-height py-3">
     <div class="d-flex justify-center align-center">
       <transition name="scale">
-        <v-alert
-          v-if="prediction && prediction.asset.id === asset.id"
-          id="prediction-info-block"
-          text
-          color="primary"
-          class="rounded"
-        >
+        <v-alert v-if="prediction && prediction.asset.id === asset.id" id="prediction-info-block" text color="primary"
+          class="rounded">
           <h3 class="mb-4 text--primary text-h5 font-weight-thin text-center">
             {{ prediction.asset.name }}
           </h3>
@@ -45,15 +40,19 @@
       <block-preloader v-show="!assetDataIsLoaded" />
     </div>
     <div class="d-flex justify-center flex-column">
-      <prediction-controls
-        :loading="requestInProgress"
-        :input-disabled="gameInProgress || !assetDataIsLoaded"
-        :search-disabled="requestInProgress || !assetDataIsLoaded"
-        @play="play"
-        @asset="init"
-      />
+      <prediction-controls :loading="requestInProgress" :input-disabled="gameInProgress || !assetDataIsLoaded"
+        :search-disabled="requestInProgress || !assetDataIsLoaded" @play="play" @asset="init" />
     </div>
-  </div>
+
+    <div class="button-mini game-info" @click="modalInfo = true">
+      <img :src="`${imageBaseUrl}/info.png`" alt="info" style="cursor: pointer;" />
+    </div>
+
+    <modal-info v-model="modalInfo">
+      <div class="flex justify-end cursor-pointer" @click="modalInfo = false">X</div>
+      <info />
+    </modal-info>
+</div>
 </template>
 
 <script>
@@ -74,7 +73,8 @@ import colors from 'vuetify/lib/util/colors'
 import CountdownTimer from '~/components/CountdownTimer'
 import BlockPreloader from '~/components/BlockPreloader'
 import { config } from '~/plugins/config'
-
+import ModalInfo from '~/components/Games/CardGame/ModalInfo'
+import Info from './info'
 am4core.useTheme(am4themes_animated)
 
 export default {
@@ -83,13 +83,17 @@ export default {
   components: {
     BlockPreloader,
     CountdownTimer,
+    ModalInfo,
+    Info,
     PredictionControls
   },
 
-  mixins: [FormMixin, PredictionMixin, SoundMixin],
+  mixins: [  FormMixin, PredictionMixin, SoundMixin],
 
-  data () {
+  data() {
     return {
+      imageBaseUrl: '/images/games/card-game-ui',
+      modalInfo: false,
       clickSound,
       formIsValid: true,
       requestInProgress: false,
@@ -107,12 +111,12 @@ export default {
 
   computed: {
     ...mapState('auth', ['account']),
-    assetPriceUpdateInterval () {
+    assetPriceUpdateInterval() {
       return Math.max(1, parseInt(config('crypto-prediction.price_update_interval'), 10)) * 1000
     }
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     this.clearPredictionInfoBlockTimeout()
     this.clearAssetPriceUpdateInterval()
   },
@@ -122,7 +126,7 @@ export default {
       updateUserAccountBalance: 'auth/updateUserAccountBalance',
       updateUserWithdrawalBalance: 'auth/updateUserWithdrawalBalance'
     }),
-    async init (asset) {
+    async init(asset) {
       this.assetDataIsLoaded = false
 
       this.gameInProgress = false
@@ -150,19 +154,19 @@ export default {
 
       this.updateAssetPrice(asset)
     },
-    async fetchGame (asset) {
+    async fetchGame(asset) {
       const { data } = await axios.get(this.getRoute('index').replace('{asset}', asset.id))
       return data
     },
-    async fetchAssetHistory (asset) {
+    async fetchAssetHistory(asset) {
       const { data } = await axios.get(route('assets.history').replace('{asset}', asset.id))
       return data
     },
-    async updateAssetPrice (asset) {
+    async updateAssetPrice(asset) {
       const { data: price } = await axios.get(route('assets.price').replace('{asset}', asset.id))
       this.pushLastPriceToChart(price)
     },
-    makeChart (data) {
+    makeChart(data) {
       if (this.chart) {
         this.chart.dispose()
       }
@@ -281,7 +285,7 @@ export default {
 
       this.chart = chart
     },
-    pushLastPriceToChart (value) {
+    pushLastPriceToChart(value) {
       const chart = this.chart
       const lastDataItem = chart.data[chart.data.length - 1]
 
@@ -298,11 +302,11 @@ export default {
         chart.series.values[0].tooltip.background.fill = valueDifference > 0
           ? am4core.color(colors.green.base)
           : (valueDifference < 0
-              ? am4core.color(colors.red.base)
-              : am4core.color(colors.grey.base))
+            ? am4core.color(colors.red.base)
+            : am4core.color(colors.grey.base))
       }
     },
-    async play ({ asset, bet, direction, duration }) {
+    async play({ asset, bet, direction, duration }) {
       this.requestInProgress = true
       this.gameInProgress = true
       this.prediction = null
@@ -323,7 +327,7 @@ export default {
       this.pushLastPriceToChart(game.gameable.open_price)
       this.setGameCompletionTimeout(game)
     },
-    async setGameCompletionTimeout (game) {
+    async setGameCompletionTimeout(game) {
       setTimeout(async () => {
         const { data: completedGame } = await axios.post(this.getRoute('complete').replace('{game}', game.id))
 
@@ -348,13 +352,13 @@ export default {
         }
       }, ((game.gameable.end_time_unix + 1) * 1000 - game.server_time))
     },
-    clearPredictionInfoBlockTimeout () {
+    clearPredictionInfoBlockTimeout() {
       if (this.predictionInfoBlockTimeoutId) {
         clearTimeout(this.predictionInfoBlockTimeoutId)
         this.predictionInfoBlockTimeoutId = null
       }
     },
-    clearAssetPriceUpdateInterval () {
+    clearAssetPriceUpdateInterval() {
       if (this.assetPriceUpdateIntervalId) {
         clearInterval(this.assetPriceUpdateIntervalId)
         this.assetPriceUpdateIntervalId = null
@@ -372,7 +376,7 @@ export default {
 
 #prediction-info-block {
   z-index: 1;
-  position:absolute;
+  position: absolute;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
@@ -380,6 +384,56 @@ export default {
   &::v-deep {
     &:before {
       opacity: 0.4 !important;
+    }
+  }
+}
+
+.button-mini {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #835db5a6;
+  border-radius: 40px;
+  color: var(--v-primary-lighten1);
+  padding: 10px;
+
+  &.game-info {
+    left: 20px;
+    top: 30px;
+  }
+
+  &.provably {
+    left: 455px;
+    top: 30px;
+  }
+
+  &.full {
+    right: 394px;
+    top: 30px;
+  }
+
+  img {
+    z-index: 0;
+  }
+
+  svg {
+    width: 45px;
+    height: 45px;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(2);
+    }
+  }
+
+  &:active {
+    img {
+      filter: brightness(4);
     }
   }
 }
