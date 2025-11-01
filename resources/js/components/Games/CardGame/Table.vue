@@ -485,6 +485,8 @@ export default {
   border-radius: 40px;
   color: var(--v-primary-lighten1);
   padding: 20px;
+  z-index: 10;
+  
   &.game-info {
     left: 364px;
     top: 30px;

@@ -1,60 +1,21 @@
 <template>
   
-  <div class="d-flex flex-column justify-space-between fill-height pt-3" style="background-image: url(/images/video-poker-bg.png);background-position: bottom;background-size: cover;perspective: 492px;">
-    <div class="message-container d-flex justify-center align-center" v-if="message">
+  <div class="d-flex flex-column justify-space-between fill-height pt-3 overflow-hidden" style="background-image: url(/images/video-poker-bg.png);background-position: bottom;background-size: cover;perspective: 492px;">
+    <div class="message-container d-flex justify-center align-center youwonmessage" v-if="message" :class="{ 'youwonmessage-rotate': playing }">
       <game-message :message="message"/>
     </div>
 
     <div class="flex-1 d-flex flex-col justify-center">
-      <div class="d-flex flex-column flex-sm-row justify-space-between align-center align-sm-end gap-5 raulette-table">
+      <div class="d-flex flex-column flex-sm-row justify-space-between align-center align-sm-end gap-5 raulette-table" :class="{ 'roulette-playing': playing }">
         <!-- <div class="floating-text">{{ appName }}</div>
         <div class="floating-text2">{{ appName }}</div> -->
-        <div class="game-action-btn-group d-flex justify-center flex-wrap">
-          <v-btn
-            :disabled="playing || Object.keys(bets_old).length === 0"
-            class="mx-1 my-2 my-lg-0 game-action-btn"
-            small
-            @click="repeat"
-          >
-            <div class="button-top text">
-              <!-- {{ $t('Repeat') }} -->
-              <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-reload"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" /><path d="M20 4v5h-5" /></svg>
-            </div>
-            <div class="button-bottom"></div>
-            <div class="button-base"></div>
-          </v-btn>
-          <v-btn
-            :disabled="playing || Object.keys(bets).length === 0"
-            class="mx-1 my-2 my-lg-0 game-action-btn"
-            small
-            @click="double"
-          >
-            <div class="button-top text">
-              <!-- {{ $t('Double') }} -->
-              <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-multiplier-2x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 16l4 -4" /><path d="M18 16l-4 -4" /><path d="M6 10a2 2 0 1 1 4 0c0 .591 -.417 1.318 -.816 1.858l-3.184 4.143l4 0" /></svg>
-            </div>
-            <div class="button-bottom"></div>
-            <div class="button-base"></div>
-          </v-btn>
-          <v-btn
-            :disabled="playing || Object.keys(bets).length === 0"
-            class="mx-1 my-2 my-lg-0 game-action-btn"
-            small
-            @click="clear"
-          >
-            <div class="button-top text">
-              <!-- {{ $t('Clear') }} -->
-              <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
-            </div>
-            <div class="button-bottom"></div>
-            <div class="button-base"></div>
-          </v-btn>
-        </div>
+
         <div class="raulette-table-bg absolute w-full">
           <img src="/images/raulette-table-desktop.png" class="max-w-full" />
         </div>
-        <div class="">
-          <div v-click-outside="onClickOutsideRoulette" class="roulette" :class="{ 'roulette-active': playing }">
+        <!-- circle -->
+        <div class="abcd roulette">
+          <div v-click-outside="onClickOutsideRoulette" :class="{ 'roulette-active': playing }">
             <canvas ref="roulette" width="480" height="480" @click="rouletteBet" @mousemove="rouletteMouse"/>
             <object class="roulette-source">
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -694,8 +655,10 @@
             </object>
           </div>
         </div>
-        <div class="bets d-flex flex-column justify-center align-center" :class="{'bet-ready':!playing}">
-          <div id="rolls" v-if="rolls.length > 0" class="mb-5 text-no-wrap overflow-hidden">
+        <!-- table num -->
+        <div class="efgh tablenum bets d-flex flex-column justify-center align-center" :class="{'bet-ready':!playing}">
+          <div id="rolls"  class="mb-5 text-no-wrap overflow-hidden">
+            <!-- v-if="rolls.length > 0" -->
             <transition-group name="slide-x-reverse-transition" tag="div">
               <v-chip
                 v-for="roll in rolls"
@@ -980,9 +943,10 @@
             </v-btn>
           </div> -->
         </div>
+
       </div>
     </div>
-    <div class="d-flex flex-column justify-space-between relative z-[9] game-bottom-bar">
+    <div class="flex-column justify-space-between relative z-[9] game-bottom-bar" :class="{'d-flex': !playing, 'roulette-playing-bottom': playing}">
       <div class="game-action-btn-group d-flex justify-center flex-wrap my-5">
         <v-btn
           :disabled="playing || Object.keys(bets_old).length === 0"
@@ -1674,11 +1638,88 @@ export default {
       top: 50%;
     }
   }
-
   .total-bet-input {
     max-width: 100px;
   }
+  .game-bottom-bar{
+    transition: transform 0.5s ease-in-out 1s;
+    &.roulette-playing-bottom{
+      transform: scale(0);
+      transition: all 0.5s ease-in-out;
+    }
+    @media(max-width: 599px){
+      transform: rotate(90deg);
+      position: absolute;
+      top: 10%;
+      right: 0px;
+      left: 70px;
+      transform-origin: left top;
+    }
+  }
+  @media screen and (max-width: 599px) {
+  .youwonmessage{
+      transition: transform 0.5s ease-in-out 1s;
+      transform: rotate(90deg) scale(1);
 
+      position: absolute !important;
+      transform-origin: top;
+      top: 120px;
+      right: -55px;
+
+      &.roulette-playing{
+        transform: scale(0);
+        transition: all 0.5s ease-in-out;
+      }
+    }
+  }
+  .raulette-table{
+    transition: all 1.5s ease-in-out;
+    &.roulette-playing{
+      transform: translate(60%, -25%) scale(1.9);
+      transition: all 1.5s ease-in-out;
+      @media screen and (max-width: 599px) {
+        transform: translate(-25%, 0%) scale(1.9);
+        transform-origin: top left;
+      }
+    }
+    @media screen and (max-width: 599px) {
+        padding: 0px 0px;
+        background-size: 400px;
+        background-position: top right;
+        gap: 10px;
+        transform: rotateX(0deg);
+        width: 315px;
+        margin: -30px 0 auto auto;
+        height: 620px;
+
+      .tablenum{
+          transform: rotate(90deg) scale(1.6) translate(40px, 20px);
+          transform-origin: top right;
+          margin: 0px !important;
+      }
+      #rolls {
+        position: relative;
+        top: 0px;
+        margin: 0px !important;
+        .v-chip.v-size--x-small.mr-1 {
+            border-radius: 50px !important;
+            font-size: 9px;
+            height: 15px;
+            width: 15px;
+            padding: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+      }
+    }
+    @media screen and (max-width: 370px) {
+      margin: -30px -45px auto auto;
+    }
+  }
+
+  
   $red: #F44336; //lighten(red, 7%);
   $green: darken(green, 10%);
   // $width: calc((100vw - 40px - 10px * 22) / 14);
@@ -1695,17 +1736,40 @@ export default {
     height: 200px;
     position: relative;
     margin-right: 0px;
+    z-index: 99;
+    transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    animation: spinroulette 20s linear infinite;
+    
     @media screen and (max-width: 599px) {
-      width: 200px;
-      height: 200px;
-      margin-bottom: 16px;
-      margin-right: 0;
+        width: 180px;
+        height: 180px;
+        margin-bottom: 0px;
+        margin-right: auto;
+        margin-left: 30px;
+        margin-top: 15px;
+        @keyframes spinroulette {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
     }
     @media screen and (min-width: 600px) {
       width: 160px;
       height: 160px;
       transform: translate(-5px, 40px);
       margin-right: 0px;
+      @keyframes spinroulette {
+        from {
+          transform: translate(-5px, 40px) rotate(0deg);
+        }
+        to {
+          transform: translate(-5px, 40px) rotate(360deg);
+        }
+      }
     }
     // @media screen and (min-width: 768px) {
     //   width: 200px;
@@ -1715,16 +1779,42 @@ export default {
       width: 160px;
       height: 160px;
       transform: translate(-2px, 40px);
+      @keyframes spinroulette {
+        from {
+          transform: translate(-2px, 40px) rotate(0deg);
+        }
+        to {
+          transform: translate(-2px, 40px) rotate(360deg);
+        }
+      }
     }
     @media screen and (min-width: 992px) {
       width: 180px;
       height: 180px;
-      transform: translate(10px, -50px);
+      // transform: translate(10px, -50px);
+      transform: translate(-10px, 50px);
+      @keyframes spinroulette {
+        from {
+          transform: translate(-10px, 50px) rotate(0deg);
+        }
+        to {
+          transform: translate(-10px, 50px) rotate(360deg);
+        }
+      }
     }
     @media screen and (min-width: 1200px) {
       width: 300px;
       height: 300px;
       transform: translate(-50px, 82px);
+      
+      @keyframes spinroulette {
+        from {
+          transform: translate(-50px, 82px) rotate(0deg);
+        }
+        to {
+          transform: translate(-50px, 82px) rotate(360deg);
+        }
+      }
     }
 
     canvas {
@@ -2512,7 +2602,7 @@ export default {
         font-size: 0.7rem;
       }
       @media screen and (max-width: 768px) {
-        font-size: 0.6rem;
+        font-size: 0.55rem;
       }
       @media screen and (max-width: 430px) {
         font-size: 0.5rem;
@@ -2747,53 +2837,61 @@ export default {
     position: relative;
     z-index: 10;
   }
-     .button-mini {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: #835db5a6;
-  border-radius: 40px;
-  color: var(--v-primary-lighten1);
-  padding: 10px;
+  .button-mini {
+position: absolute;
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+background: #835db5a6;
+border-radius: 40px;
+color: var(--v-primary-lighten1);
+padding: 10px;
+z-index: 10;
 
-  &.game-info {
-    left: 20px;
-    top: 40px;
-  }
-
-  &.provably {
-    left: 455px;
-    top: 30px;
-  }
-
-  &.full {
-    right: 394px;
-    top: 30px;
-  }
-
-  img {
-    z-index: 0;
-  }
-
-  svg {
-    width: 45px;
-    height: 45px;
-  }
-
-  &:hover {
-    img {
-      filter: brightness(2);
-    }
-  }
-
-  &:active {
-    img {
-      filter: brightness(4);
-    }
-  }
+&.game-info {
+left: 20px;
+top: 40px;
 }
+
+&.provably {
+left: 455px;
+top: 30px;
+}
+
+&.full {
+right: 394px;
+top: 30px;
+}
+
+img {
+z-index: 0;
+}
+
+svg {
+width: 45px;
+height: 45px;
+}
+
+&:hover {
+img {
+  filter: brightness(2);
+}
+}
+
+&:active {
+img {
+  filter: brightness(4);
+}
+}
+  }
+  @media(max-width: 599px){
+      .button-mini.game-info{
+        position: absolute;
+        top: 16px;
+        right: 16px;
+      }
+  }
 </style>

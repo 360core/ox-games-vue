@@ -809,6 +809,7 @@ export default {
   border-radius: 40px;
   color: var(--v-primary-lighten1);
   padding: 10px;
+  z-index: 10;
 
   &.game-info {
     left: 20px;

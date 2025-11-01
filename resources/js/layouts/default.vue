@@ -581,7 +581,7 @@
         <span class="text-xs font-bold text-neutral-500">Explore</span>
       </div>
       <div class="shrink-0">
-        <a class="flex flex-col gap-1 items-center text-white" href="/games/multiplayer-roulette">
+        <a class="flex flex-col gap-1 items-center text-white" href="/raffles/current">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-ticket"
             viewBox="0 0 16 16">
             <path
