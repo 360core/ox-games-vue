@@ -262,8 +262,21 @@
                   </svg>
                 </button>
               </div>
-
-              <v-form v-model="formIsValid" @submit.prevent="login" class="w-full grow">
+                 <v-form v-if="isConnected"  @submit.prevent="walletLogin" class="w-full grow">
+                    <div class="mt-5 ">
+                      <v-text-field :value="form.address" :label="$t('Your address')" :disabled="true" hide-details
+                        outlined />
+                      <v-row class="mt-3">
+                        <v-col class="text-center text-md-left">
+                          <v-btn type="submit" color="primary" class="w-full" :disabled="isLoading"
+                            :loading="isLoading">
+                            {{ $t('Log in') }}
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </div>
+                </v-form>
+                <v-form v-model="formIsValid" @submit.prevent="login"  class="w-full ">
                 <v-text-field v-model="form.email" :label="$t('Email')" type="email" name="email" dense
                   class="custom-text-field" :rules="[validationRequired, validationEmail]"
                   :error="form.errors.has('email')" :error-messages="form.errors.get('email')" outlined
@@ -296,22 +309,10 @@
                   :disabled="!formIsValid || loading || (!!recaptchaPublicKey && !form.recaptcha)" :loading="loading">
                   {{ $t('Log in') }}
                 </v-btn>
-                <v-form @submit.prevent="walletLogin">
+                </v-form> 
+                <v-form v-if="!isConnected" @submit.prevent="walletLogin" class="w-full ">
                   <template v-if="isInstalled">
-                    <div v-if="isConnected" class="mt-5 ">
-                      <v-text-field :value="form.address" :label="$t('Your address')" :disabled="true" hide-details
-                        outlined />
-
-                      <v-row class="mt-3">
-                        <v-col class="text-center text-md-left">
-                          <v-btn type="submit" color="primary" class="w-full" :disabled="isLoading"
-                            :loading="isLoading">
-                            {{ $t('Log in') }}
-                          </v-btn>
-                        </v-col>
-                      </v-row>
-                    </div>
-                    <v-btn v-else color="primary" class="mb-4 mt-2 loginBtnSec w-full" @click="connectWallet()">
+                    <v-btn  color="primary" class="mb-4 mt-2 loginBtnSec w-full" @click="connectWallet()">
                       {{ $t('Connect wallet') }}
                     </v-btn>
                   </template>
@@ -323,7 +324,8 @@
                       {{ $t('If you are using a mobile phone, use the in-app browser.') }}
                     </p>
                   </v-alert>
-                </v-form>
+                </v-form> 
+               
                 <div class="flex text-center pa-0 gap-2 text-sm font-semibold -mt-1">
                   <div>New to {{ appName }}?</div>
                   <button type="button" :class="{ active: activeTab === 'signup' }" @click="activeTab = 'signup'"
@@ -331,7 +333,7 @@
                     <span class="text-primary-base">{{ $t('Create account') }}</span>
                   </button>
                 </div>
-              </v-form>
+            
 
               <!-- <div class="w-full">
                 <div class="w-full flex items-center">
