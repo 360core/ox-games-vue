@@ -995,6 +995,7 @@
         :disabled="account.balance < totalBetAmount || totalBetAmount === 0"
         @bet-change="bet = $event"
         @play="play"
+        @click="sayHello"
       >
         <template v-slot:after-bet-input>
           <v-text-field
@@ -1650,9 +1651,9 @@ export default {
     @media(max-width: 599px){
       transform: rotate(90deg);
       position: absolute;
-      top: 10%;
+      top: 7%;
       right: 0px;
-      left: 70px;
+      left: 60px;
       transform-origin: left top;
     }
   }
@@ -1689,11 +1690,15 @@ export default {
         gap: 10px;
         transform: rotateX(0deg);
         width: 315px;
-        margin: -30px 0 auto auto;
-        height: 620px;
-
+        margin: -100px 0 auto auto;
+        height: 660px;
+        max-height: 660px;
+        transition: all 1.5s ease-in-out;
+          &.roulette-playing{
+            margin: 0px 0 auto auto;
+          }
       .tablenum{
-          transform: rotate(90deg) scale(1.6) translate(40px, 20px);
+          transform: rotate(90deg) scale(1.6) translate(15px, 20px);
           transform-origin: top right;
           margin: 0px !important;
       }
@@ -1715,7 +1720,7 @@ export default {
       }
     }
     @media screen and (max-width: 370px) {
-      margin: -30px -45px auto auto;
+        margin: -100px -55px auto auto;
     }
   }
 
@@ -2324,6 +2329,12 @@ export default {
             height: 16px;
             min-width: 16px;
           }
+          @media screen and (max-width: 599px) {
+              font-size: 8px;
+              height: 16px;
+              min-width: 16px;
+              transform: scale(0.6) !important;
+          }
           color: #FFFFFF;
           text-align: center;
           transform: translate(-50%, -50%) scale(0);
@@ -2650,6 +2661,12 @@ export default {
           height: 16px;
           min-width: 16px;
         }
+        @media screen and (max-width: 599px) {
+            font-size: 8px;
+            height: 16px;
+            min-width: 16px;
+            transform: scale(0.6) !important;
+        }
         color: #FFFFFF;
         text-align: center;
         bottom: 1px;
@@ -2890,8 +2907,9 @@ img {
   @media(max-width: 599px){
       .button-mini.game-info{
         position: absolute;
-        top: 16px;
-        right: 16px;
+        top: 6px;
+        left: 6px;
+        transform: scale(0.8);
       }
   }
 </style>
